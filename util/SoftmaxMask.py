@@ -1,4 +1,5 @@
-import tensorflow as tf
+import tensorflow.compat.v1 as tf
+tf.disable_v2_behavior()
 
 def normalizer(norm_type, inputs, seq_mask, axis = 1):
     switch = {

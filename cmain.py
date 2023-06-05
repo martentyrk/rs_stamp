@@ -1,6 +1,7 @@
 # coding=utf-8
 from optparse import OptionParser
-import tensorflow as tf
+import tensorflow.compat.v1 as tf
+# tf.disable_v2_behavior()
 import pandas as pd
 import numpy as np
 from data_prepare.entity.samplepack import Samplepack
@@ -12,13 +13,13 @@ from util.FileDumpLoad import dump_file, load_file
 from util.Randomer import Randomer
 # the data path.
 
-root_path = '/home/zyf/code'
-project_name = '/STAMP'
+root_path = '/home/lcur2471'
+project_name = '/rs_stamp'
 
 # the pretreatment data path.
 
-rsc15_train = root_path + project_name +'/datas/data/rsc15_train_full.txt'
-rsc15_test = root_path + project_name +'/datas/data/rsc15_test.txt'
+rsc15_train = root_path + project_name +'/datas/data/datarsc15_train_full.txt'
+rsc15_test = root_path + project_name +'/datas/data/datarsc15_test.txt'
 mid_rsc15_train_data = "rsc15_train.data"
 mid_rsc15_test_data = "rsc15_test.data"
 mid_rsc15_emb_dict = "rsc15_emb_dict.data"

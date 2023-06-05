@@ -1,6 +1,7 @@
 #coding=utf-8
 import numpy as np
-import tensorflow as tf
+import tensorflow.compat.v1 as tf
+tf.disable_v2_behavior()
 import time
 from basic_layer.NN_adam import NN
 from util.Printer import TIPrint
@@ -154,12 +155,12 @@ class Seq2SeqAttNN(NN):
         self.alph = tf.reshape(alph,[batch_size,1,-1])
 
         self.w1 = tf.Variable(
-            tf.random_normal([self.edim, self.edim], stddev=self.stddev),
+            tf.random.normal([self.edim, self.edim], stddev=self.stddev),
             trainable=True
         )
 
         self.w2 = tf.Variable(
-            tf.random_normal([self.edim, self.edim], stddev=self.stddev),
+            tf.random.normal([self.edim, self.edim], stddev=self.stddev),
             trainable=True
         )
         attout = tf.tanh(tf.matmul(attout,self.w1))
