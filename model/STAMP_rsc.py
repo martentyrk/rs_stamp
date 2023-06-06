@@ -1,6 +1,7 @@
 #coding=utf-8
 import numpy as np
-import tensorflow as tf
+import tensorflow.compat.v1 as tf
+tf.disable_v2_behavior()
 import time
 from basic_layer.NN_adam import NN
 from util.Printer import TIPrint

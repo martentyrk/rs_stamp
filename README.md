@@ -8,8 +8,17 @@ These are two datasets we used in our paper. After download them, you can put th
 
 YOOCHOOSE: http://2015.recsyschallenge.com/challenge.html
 
+In order to download YOOCHOOSE, follow the instructions given here until step 2, we dont need step 3 since data is provided in the datas folder already, with .data files:
+https://github.com/RUCAIBox/RecSysDatasets/blob/master/conversion_tools/usage/YOOCHOOSE.md
+
+- Run preprocess_into_text.job under jobs folder, before make sure you provide the correct data path in datas/data/process_rsc.py, or just run process_rsc.py in terminal :)
+
+
 DIGINETICA: http://cikm2016.cs.iupui.edu/cikm-cup
 
+Check for the Data field to download everything here: https://competitions.codalab.org/competitions/11161#learn_the_details-data2
+
+Later run process_cikm.py in datas/cikm16 to extract the sessions we will be training on, make sure paths are correct.
 ---
 
 ## Usage
@@ -27,6 +36,8 @@ Or you can run it by using the `run.sh` directly.
 
 . Python 3
 . Tensorflow 1.4
+
+```pip install dill``` as well
 
 ---
 

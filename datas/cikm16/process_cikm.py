@@ -4,7 +4,7 @@ import numpy as np
 import pandas as pd
 import datetime as dt
 
-PATH_TO_ORIGINAL_DATA = ''
+PATH_TO_ORIGINAL_DATA = '/home/lcur2471/rs_stamp/data/diginetica/'
 PATH_TO_PROCESSED_DATA = ''
 
 data = pd.read_csv(PATH_TO_ORIGINAL_DATA + 'train-item-views.csv', sep=';', header=0, usecols=[0,2,3,4], dtype={0:np.int32, 1:np.int64, 2:np.int32,3:str})
