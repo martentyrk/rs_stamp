@@ -292,9 +292,9 @@ def main(options, modelconf="config/model.conf"):
                 #     model.train(sess, train_data, test_data, saver, threshold_acc=config['recsys_threshold_acc'])
 
             else:
-                if input_data is "test":
+                if input_data == "test":
                     sent_data = test_data
-                elif input_data is "train":
+                elif input_data == "train":
                     sent_data = train_data
                 else:
                     sent_data = test_data
