@@ -21,8 +21,8 @@ import torch
 from torch import nn
 from torch.nn.init import normal_
 
-from pytorch.model.abstract_recommender import SequentialRecommender
-from pytorch.loss import BPRLoss
+from pytorch_implementation.model.abstract_recommender import SequentialRecommender
+from pytorch_implementation.loss import BPRLoss
 
 
 class STAMP(SequentialRecommender):
@@ -86,6 +86,7 @@ class STAMP(SequentialRecommender):
         hs = self.tanh(self.mlp_a(ma))
         ht = self.tanh(self.mlp_b(last_inputs))
         seq_output = hs * ht
+        
         return seq_output
 
     def count_alpha(self, context, aspect, output):
@@ -112,6 +113,7 @@ class STAMP(SequentialRecommender):
         res_sum = res_ctx + res_asp + res_output + self.b_a
         res_act = self.w0(self.sigmoid(res_sum))
         alpha = res_act.squeeze(2)
+        
         return alpha
 
     def calculate_loss(self, interaction):
@@ -119,6 +121,7 @@ class STAMP(SequentialRecommender):
         item_seq_len = interaction[self.ITEM_SEQ_LEN]
         seq_output = self.forward(item_seq, item_seq_len)
         pos_items = interaction[self.POS_ITEM_ID]
+        
         if self.loss_type == "BPR":
             neg_items = interaction[self.NEG_ITEM_ID]
             pos_items_emb = self.item_embedding(pos_items)
@@ -126,11 +129,14 @@ class STAMP(SequentialRecommender):
             pos_score = torch.sum(seq_output * pos_items_emb, dim=-1)  # [B]
             neg_score = torch.sum(seq_output * neg_items_emb, dim=-1)  # [B]
             loss = self.loss_fct(pos_score, neg_score)
+
             return loss
+        
         else:  # self.loss_type = 'CE'
             test_item_emb = self.item_embedding.weight
             logits = torch.matmul(seq_output, test_item_emb.transpose(0, 1))
             loss = self.loss_fct(logits, pos_items)
+            
             return loss
 
     def predict(self, interaction):
@@ -140,6 +146,7 @@ class STAMP(SequentialRecommender):
         seq_output = self.forward(item_seq, item_seq_len)
         test_item_emb = self.item_embedding(test_item)
         scores = torch.mul(seq_output, test_item_emb).sum(dim=1)  # [B]
+        
         return scores
 
     def full_sort_predict(self, interaction):
@@ -148,4 +155,5 @@ class STAMP(SequentialRecommender):
         seq_output = self.forward(item_seq, item_seq_len)
         test_items_emb = self.item_embedding.weight
         scores = torch.matmul(seq_output, test_items_emb.transpose(0, 1))
+        
         return scores
