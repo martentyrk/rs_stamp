@@ -24,7 +24,7 @@ import torch
 import torch.nn as nn
 from texttable import Texttable
 
-from pytorch_implementation.utils.enum_type import ModelType
+from enum_type import ModelType
 
 
 def get_local_time():

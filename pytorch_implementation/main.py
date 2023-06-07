@@ -1,14 +1,14 @@
 import argparse
 from logging import getLogger
-from utils import init_logger, init_seed, get_model, get_trainer, set_color
+from utils.utils import init_seed
+from utils.logger import init_logger, set_color
 from config import Config
 from model.stamp import STAMP
-from pytorch_implementation.data import create_dataset
-from pytorch_implementation.data.utils import get_dataloader
-from pytorch_implementation.data.cikm16data_read import load_data2
-from pytorch_implementation.data.rsyc15data_read_p import load_data_p
-from pytorch_implementation.data.load_dict import load_random
-from pytorch_implementation.data.FileDumpLoad import dump_file, load_file
+from data.utils import get_dataloader, create_dataset
+from data.cikm16data_read import load_data2
+from data.rsyc15data_read_p import load_data_p
+from data.load_dict import load_random
+from data.FileDumpLoad import dump_file, load_file
 from trainer import Trainer
 from torch.utils.data import DataLoader
 

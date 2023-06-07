@@ -23,7 +23,7 @@ import os
 import colorlog
 import re
 import hashlib
-from pytorch_implementation.utils.utils import get_local_time, ensure_dir
+from utils import get_local_time, ensure_dir
 from colorama import init
 
 log_colors_config = {
