@@ -39,7 +39,6 @@ from pytorch_implementation.utils import (
     calculate_valid_score,
     dict2str,
     EvaluatorType,
-    get_tensorboard,
     set_color,
     get_gpu_usage,
     WandbLogger,
@@ -109,7 +108,6 @@ class Trainer(AbstractTrainer):
         super(Trainer, self).__init__(config, model)
 
         self.logger = getLogger()
-        self.tensorboard = get_tensorboard(self.logger)
         self.wandblogger = WandbLogger(config)
         self.learner = config["learner"]
         self.learning_rate = config["learning_rate"]
@@ -358,44 +356,6 @@ class Trainer(AbstractTrainer):
             train_loss_output += set_color("train loss", "blue") + ": " + des % losses
         return train_loss_output + "]"
 
-    def _add_train_loss_to_tensorboard(self, epoch_idx, losses, tag="Loss/Train"):
-        if isinstance(losses, tuple):
-            for idx, loss in enumerate(losses):
-                self.tensorboard.add_scalar(tag + str(idx), loss, epoch_idx)
-        else:
-            self.tensorboard.add_scalar(tag, losses, epoch_idx)
-
-    def _add_hparam_to_tensorboard(self, best_valid_result):
-        # base hparam
-        hparam_dict = {
-            "learner": self.config["learner"],
-            "learning_rate": self.config["learning_rate"],
-            "train_batch_size": self.config["train_batch_size"],
-        }
-        # unrecorded parameter
-        unrecorded_parameter = {
-            parameter
-            for parameters in self.config.parameters.values()
-            for parameter in parameters
-        }.union({"model", "dataset", "config_files", "device"})
-        # other model-specific hparam
-        hparam_dict.update(
-            {
-                para: val
-                for para, val in self.config.final_config_dict.items()
-                if para not in unrecorded_parameter
-            }
-        )
-        for k in hparam_dict:
-            if hparam_dict[k] is not None and not isinstance(
-                hparam_dict[k], (bool, str, float, int)
-            ):
-                hparam_dict[k] = str(hparam_dict[k])
-
-        self.tensorboard.add_hparams(
-            hparam_dict, {"hparam/best_valid_result": best_valid_result}
-        )
-
     def fit(
         self,
         train_data,
@@ -443,7 +403,6 @@ class Trainer(AbstractTrainer):
             )
             if verbose:
                 self.logger.info(train_loss_output)
-            self._add_train_loss_to_tensorboard(epoch_idx, train_loss)
             self.wandblogger.log_metrics(
                 {"epoch": epoch_idx, "train_loss": train_loss, "train_step": epoch_idx},
                 head="train",
@@ -487,7 +446,6 @@ class Trainer(AbstractTrainer):
                 if verbose:
                     self.logger.info(valid_score_output)
                     self.logger.info(valid_result_output)
-                self.tensorboard.add_scalar("Vaild_score", valid_score, epoch_idx)
                 self.wandblogger.log_metrics(
                     {**valid_result, "valid_step": valid_step}, head="valid"
                 )
@@ -510,7 +468,6 @@ class Trainer(AbstractTrainer):
 
                 valid_step += 1
 
-        self._add_hparam_to_tensorboard(self.best_valid_score)
         return self.best_valid_score, self.best_valid_result
 
     def _full_sort_batch_eval(self, batched_data):

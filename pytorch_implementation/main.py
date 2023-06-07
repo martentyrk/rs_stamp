@@ -1,11 +1,137 @@
 import argparse
 from logging import getLogger
-from pytorch_implementation.utils import init_logger, init_seed, get_model, get_trainer, set_color
-from pytorch_implementation.config import Config
-from pytorch_implementation.model.stamp import STAMP
+from utils import init_logger, init_seed, get_model, get_trainer, set_color
+from config import Config
+from model.stamp import STAMP
 from pytorch_implementation.data import create_dataset
 from pytorch_implementation.data.utils import get_dataloader
-from pytorch_implementation.trainer import Trainer
+from pytorch_implementation.data.cikm16data_read import load_data2
+from pytorch_implementation.data.rsyc15data_read_p import load_data_p
+from pytorch_implementation.data.load_dict import load_random
+from pytorch_implementation.data.FileDumpLoad import dump_file, load_file
+from trainer import Trainer
+from torch.utils.data import DataLoader
+
+root_path = '/home/lcur2471'
+project_name = '/rs_stamp'
+
+rsc15_train = root_path + project_name +'/data_training/datarsc15_train_full.txt'
+rsc15_test = root_path + project_name +'/data_training/datarsc15_test.txt'
+mid_rsc15_train_data = "rsc15_train.data"
+mid_rsc15_test_data = "rsc15_test.data"
+mid_rsc15_emb_dict = "rsc15_emb_dict.data"
+mid_rsc15_4_emb_dict = "rsc15_4_emb_dict.data"
+mid_rsc15_64_emb_dict = "rsc15_64_emb_dict.data"
+
+
+cikm16_train = root_path + project_name +'data_training/cikm16/cmki16_train_full.txt'
+cikm16_test = root_path + project_name +'/cikm16/cmki16_test.txt'
+mid_cikm16_emb_dict = "cikm16_emb_dict.data"
+
+def load_tt_datas(config={}, reload=True):
+    '''
+    loda data.
+    config: 获得需要加载的数据类型，放入pre_embedding.
+    nload: 是否重新解析原始数据
+    '''
+
+    if reload:
+        print( "reload the datasets.")
+        print (config['dataset'])
+
+        if config['dataset'] == 'rsc15_4':
+            train_data, test_data, item2idx, n_items = load_data_p(
+                rsc15_train,
+                rsc15_test,
+                pro = 4
+            )
+
+            config["n_items"] = n_items-1
+            emb_dict = load_random(item2idx,edim=config['hidden_size'], init_std=config['emb_stddev'])
+            config['pre_embedding'] = emb_dict
+            path = 'datas/mid_data'
+            dump_file([emb_dict, path+mid_rsc15_4_emb_dict])
+            print("-----")
+
+        if config['dataset'] == 'rsc15_64':
+            train_data, test_data, item2idx, n_items = load_data_p(
+                rsc15_train,
+                rsc15_test,
+                pro = 64
+            )
+
+            config["n_items"] = n_items-1
+            emb_dict = load_random(item2idx, edim=config['hidden_size'], init_std=config['emb_stddev'])
+            config['pre_embedding'] = emb_dict
+            path = 'datas/mid_data'
+            dump_file([emb_dict, path + mid_rsc15_64_emb_dict])
+            print("-----")
+
+        if config['dataset'] == 'cikm16':
+            train_data, test_data, item2idx, n_items = load_data2(
+                cikm16_train,
+                cikm16_test,
+                class_num=config['class_num']
+            )
+            config["n_items"] = n_items-1
+            emb_dict = load_random(item2idx,edim=config['hidden_size'], init_std=config['emb_stddev'])
+            config['pre_embedding'] = emb_dict
+            path = 'datas/mid_data'
+            dump_file([emb_dict, path+mid_cikm16_emb_dict])
+            print("-----")
+
+    else:
+        print ("not reload the datasets.")
+        print(config['dataset'])
+
+        if config['dataset'] == 'rsc15_4':
+            train_data, test_data, item2idx, n_items = load_data_p(
+                rsc15_train,
+                rsc15_test,
+                pro=4
+            )
+
+            config["n_items"] = n_items-1
+            path = 'datas/mid_data'
+            emb_dict = load_file(path + mid_rsc15_4_emb_dict)
+            config['pre_embedding'] = emb_dict[0]
+            # path = 'datas/mid_data'
+            # dump_file([emb_dict, path+mid_rsc15_emb_dict])
+            print("-----")
+
+        if config['dataset'] == 'rsc15_64':
+            train_data, test_data, item2idx, n_items = load_data_p(
+                rsc15_train,
+                rsc15_test,
+                pro=64
+            )
+
+            config["n_items"] = n_items-1
+            # emb_dict = load_random(n_items, edim=config['hidden_size'], init_std=config['emb_stddev'])
+            # path = 'datas/train_emb/'
+            # emb_dict = load_file(path + "rsc15_64_emb.data")
+            path = 'datas/mid_data'
+            emb_dict = load_file(path+mid_rsc15_64_emb_dict)
+            config['pre_embedding'] = emb_dict[0]
+
+            # dump_file([emb_dict, path + mid_rsc15_emb_dict])
+            print("-----")
+
+        if config['dataset'] == 'cikm16':
+            train_data, test_data, item2idx, n_items = load_data2(
+                cikm16_train,
+                cikm16_test,
+                class_num=config['class_num']
+            )
+            config["n_items"] = n_items-1
+            path = 'datas/mid_data'
+            emb_dict = load_file(path + mid_cikm16_emb_dict)
+            # path = 'datas/train_emb/'
+            # emb_dict = load_file(path + "cikm16_emb.data")
+            config['pre_embedding'] = emb_dict[0]
+            print("-----")
+
+    return train_data, test_data
 
 def get_args():
     parser = argparse.ArgumentParser()
@@ -58,35 +184,36 @@ if __name__ == "__main__":
     dataset = create_dataset(config)
     logger.info(dataset)
     
-    train_dataset, test_dataset = dataset.build()
-    if args.validation:
-        train_dataset.shuffle()
-        new_train_dataset, new_test_dataset = train_dataset.split_by_ratio(
-            [1 - args.valid_portion, args.valid_portion]
-        )
-        train_data = get_dataloader(config, "train")(
-            config, new_train_dataset, None, shuffle=True
-        )
-        test_data = get_dataloader(config, "test")(
-            config, new_test_dataset, None, shuffle=False
-        )
-    else:
-        train_data = get_dataloader(config, "train")(
-            config, train_dataset, None, shuffle=True
-        )
-        test_data = get_dataloader(config, "test")(
-            config, test_dataset, None, shuffle=False
-        )
+    # train_dataset, test_dataset = dataset.build()
+    # if args.validation:
+    #     train_dataset.shuffle()
+    #     new_train_dataset, new_test_dataset = train_dataset.split_by_ratio(
+    #         [1 - args.valid_portion, args.valid_portion]
+    #     )
+    #     train_data = get_dataloader(config, "train")(
+    #         config, new_train_dataset, None, shuffle=True
+    #     )
+    #     test_data = get_dataloader(config, "test")(
+    #         config, new_test_dataset, None, shuffle=False
+    #     )
+    # else:
+    #     train_data = get_dataloader(config, "train")(
+    #         config, train_dataset, None, shuffle=True
+    #     )
+    #     test_data = get_dataloader(config, "test")(
+    #         config, test_dataset, None, shuffle=False
+    #     )
+    
+    train_data, test_data = load_tt_datas(config, False)
+    
+    train_loader = DataLoader(train_data, batch_size=128, shuffle=False)
+    test_loader = DataLoader(test_data, batch_size=128, shuffle=False)
     
     model = STAMP(config, train_data.dataset).to(config['device'])
     logger.info(model)
     
     # trainer loading and initialization
     trainer = Trainer(config, model)
-    
-    test_score, test_result = trainer.fit(
-        train_data, test_data, saved=True, show_progress=config["show_progress"]
-    )
     
     test_score, test_result = trainer.fit(
         train_data, test_data, saved=True, show_progress=config["show_progress"]
