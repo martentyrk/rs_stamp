@@ -1,0 +1,10 @@
+*
+!.gitignore
+
+# files that should be in here:
+# product-categories.csv
+# products.csv
+# train-clicks.csv
+# train-item-views.csv
+# train-purchases.csv
+# train-queries.csv

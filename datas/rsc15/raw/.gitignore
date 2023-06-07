@@ -1,0 +1,10 @@
+*
+!.gitignore
+
+# files that should be in here:
+
+# yoochoose-data/
+## yoochoose-data is the 'yoochoose-data' folder from the yoochoose dataset
+
+# yoochoose-misc/
+## yoochoose-misc are the other files in the main yoochoose dataset directory

@@ -1,0 +1,7 @@
+*
+!.gitignore
+
+# files that should be in here:
+# mid_datarsc15_4_emb_dict.data
+# mid_datarsc15_64_emb_dict.data
+# mid_datarsc15_emb_dict.data

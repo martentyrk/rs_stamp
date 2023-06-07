@@ -11,15 +11,19 @@ from data_prepare.rsyc15data_read_p import load_data_p
 from util.Config import read_conf
 from util.FileDumpLoad import dump_file, load_file
 from util.Randomer import Randomer
-# the data path.
 
-root_path = '/home/lcur2471'
-project_name = '/rs_stamp'
+import yaml
+
+with open('../paths.yaml', 'r') as file:
+    paths = yaml.safe_load(file)
+
+# the data path.
+root_path = paths['root_path']
+project_name = paths['project_name']
 
 # the pretreatment data path.
-
-rsc15_train = root_path + project_name +'/datas/data/datarsc15_train_full.txt'
-rsc15_test = root_path + project_name +'/datas/data/datarsc15_test.txt'
+rsc15_train = root_path + project_name +'/datas/rsc15/processed/rsc15_train_full.txt'
+rsc15_test = root_path + project_name +'/datas/rsc15/processed/rsc15_test.txt'
 mid_rsc15_train_data = "rsc15_train.data"
 mid_rsc15_test_data = "rsc15_test.data"
 mid_rsc15_emb_dict = "rsc15_emb_dict.data"
@@ -27,9 +31,9 @@ mid_rsc15_4_emb_dict = "rsc15_4_emb_dict.data"
 mid_rsc15_64_emb_dict = "rsc15_64_emb_dict.data"
 
 
-cikm16_train = root_path + project_name +'/datas/cikm16/cmki16_train_full.txt'
-cikm16_test = root_path + project_name +'/datas/cikm16/cmki16_test.txt'
-mid_cikm16_emb_dict = "cikm16_emb_dict.data"
+cikm16_train = root_path + project_name +'/datas/cikm16/processed/cikm16_train_full.txt'
+cikm16_test = root_path + project_name +'/datas/cikm16/processed/cikm16_test.txt'
+mid_cikm16_emb_dict = "mid_datacikm16_emb_dict.data"
 
 def load_tt_datas(config={}, reload=True):
     '''
@@ -52,7 +56,7 @@ def load_tt_datas(config={}, reload=True):
             config["n_items"] = n_items-1
             emb_dict = load_random(item2idx,edim=config['hidden_size'], init_std=config['emb_stddev'])
             config['pre_embedding'] = emb_dict
-            path = 'datas/mid_data'
+            path = '../datas/rsc15/embeddings/'
             dump_file([emb_dict, path+mid_rsc15_4_emb_dict])
             print("-----")
 
@@ -66,7 +70,7 @@ def load_tt_datas(config={}, reload=True):
             config["n_items"] = n_items-1
             emb_dict = load_random(item2idx, edim=config['hidden_size'], init_std=config['emb_stddev'])
             config['pre_embedding'] = emb_dict
-            path = 'datas/mid_data'
+            path = '../datas/rsc15/embeddings/'
             dump_file([emb_dict, path + mid_rsc15_64_emb_dict])
             print("-----")
 
@@ -79,7 +83,7 @@ def load_tt_datas(config={}, reload=True):
             config["n_items"] = n_items-1
             emb_dict = load_random(item2idx,edim=config['hidden_size'], init_std=config['emb_stddev'])
             config['pre_embedding'] = emb_dict
-            path = 'datas/mid_data'
+            path = '../datas/cikm16/embeddings/'
             dump_file([emb_dict, path+mid_cikm16_emb_dict])
             print("-----")
 
@@ -95,7 +99,7 @@ def load_tt_datas(config={}, reload=True):
             )
 
             config["n_items"] = n_items-1
-            path = 'datas/mid_data'
+            path = '../datas/rsc15/embeddings/'
             emb_dict = load_file(path + mid_rsc15_4_emb_dict)
             config['pre_embedding'] = emb_dict[0]
             # path = 'datas/mid_data'
@@ -113,7 +117,7 @@ def load_tt_datas(config={}, reload=True):
             # emb_dict = load_random(n_items, edim=config['hidden_size'], init_std=config['emb_stddev'])
             # path = 'datas/train_emb/'
             # emb_dict = load_file(path + "rsc15_64_emb.data")
-            path = 'datas/mid_data'
+            path = '../datas/rsc15/embeddings/'
             emb_dict = load_file(path+mid_rsc15_64_emb_dict)
             config['pre_embedding'] = emb_dict[0]
 
@@ -127,7 +131,7 @@ def load_tt_datas(config={}, reload=True):
                 class_num=config['class_num']
             )
             config["n_items"] = n_items-1
-            path = 'datas/mid_data'
+            path = '../datas/rsc15/embeddings/'
             emb_dict = load_file(path + mid_cikm16_emb_dict)
             # path = 'datas/train_emb/'
             # emb_dict = load_file(path + "cikm16_emb.data")
