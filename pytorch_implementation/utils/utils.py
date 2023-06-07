@@ -95,17 +95,17 @@ def get_trainer(model_type, model_name):
     """
     try:
         return getattr(
-            importlib.import_module("recbole.trainer"), model_name + "Trainer"
+            importlib.import_module("pytorch_implementation.trainer"), model_name + "Trainer"
         )
     except AttributeError:
         if model_type == ModelType.KNOWLEDGE:
-            return getattr(importlib.import_module("recbole.trainer"), "KGTrainer")
+            return getattr(importlib.import_module("pytorch_implementation.trainer"), "KGTrainer")
         elif model_type == ModelType.TRADITIONAL:
             return getattr(
-                importlib.import_module("recbole.trainer"), "TraditionalTrainer"
+                importlib.import_module("pytorch_implementation.trainer"), "TraditionalTrainer"
             )
         else:
-            return getattr(importlib.import_module("recbole.trainer"), "Trainer")
+            return getattr(importlib.import_module("pytorch_implementation.trainer"), "Trainer")
 
 
 def early_stopping(value, best, cur_step, max_step, bigger=True):
