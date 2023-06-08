@@ -15,12 +15,14 @@ recbole.data.dataloader.general_dataloader
 import numpy as np
 import torch
 from logging import getLogger
-from recbole.data.dataloader.abstract_dataloader import (
+from .abstract_dataloader import (
     AbstractDataLoader,
     NegSampleDataLoader,
 )
-from recbole.data.interaction import Interaction, cat_interactions
-from recbole.utils import InputType, ModelType
+import sys
+sys.path.append("../..")
+from data.interaction import Interaction, cat_interactions
+from utils.enum_type import InputType, ModelType
 
 
 class TrainDataLoader(NegSampleDataLoader):

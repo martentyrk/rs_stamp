@@ -21,8 +21,10 @@ import torch
 from torch import nn
 from torch.nn.init import normal_
 
-from pytorch_implementation.model.abstract_recommender import SequentialRecommender
-from pytorch_implementation.loss import BPRLoss
+import sys
+sys.path.append("../..")
+from model.abstract_recommender import SequentialRecommender
+from loss import BPRLoss
 
 
 class STAMP(SequentialRecommender):

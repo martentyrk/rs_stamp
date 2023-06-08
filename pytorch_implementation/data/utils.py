@@ -19,10 +19,16 @@ import pickle
 import warnings
 from typing import Literal
 
-from dataloader import *
+from .dataloader.abstract_dataloader import *
+from .dataloader.general_dataloader import *
+from .dataloader.user_dataloader import *
 from sampler import Sampler, RepeatableSampler
-from ..utils import ModelType, ensure_dir, set_color
-from ..utils.argument_list import dataset_arguments
+import sys
+sys.path.append("..")
+from utils.enum_type import ModelType 
+from utils.logger import set_color
+from utils.utils import ensure_dir
+from utils.argument_list import dataset_arguments
 
 
 def create_dataset(config):

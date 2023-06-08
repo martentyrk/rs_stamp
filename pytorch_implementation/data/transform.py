@@ -8,7 +8,7 @@ import numpy as np
 import random
 import torch
 from copy import deepcopy
-from recbole.data.interaction import Interaction, cat_interactions
+from .interaction import Interaction, cat_interactions
 
 
 def construct_transform(config):

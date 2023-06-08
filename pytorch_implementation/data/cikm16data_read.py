@@ -1,7 +1,7 @@
 import pandas as pd
 import numpy as np
-from pytorch_implementation.data.entity.sample import Sample
-from pytorch_implementation.data.entity.samplepack import Samplepack
+from .entity.sample import Sample
+from .entity.samplepack import Samplepack
 
 
 def load_data2(train_file, test_file, pad_idx=0, class_num = 3):

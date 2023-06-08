@@ -18,7 +18,10 @@ import numpy as np
 import torch
 import torch.nn as nn
 
-from pytorch_implementation.utils import ModelType, set_color
+import sys
+sys.path.append("..")
+from utils.enum_type import ModelType
+from utils.logger import set_color
 
 
 class AbstractRecommender(nn.Module):

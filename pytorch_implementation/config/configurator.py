@@ -18,20 +18,13 @@ import sys
 import yaml
 from logging import getLogger
 from typing import Literal
+from enum import Enum
+from evaluator.register import metric_types, smaller_metrics
+from utils.utils import get_model
+from utils.enum_type import EvaluatorType, ModelType, InputType
+from utils.argument_list import general_arguments, training_arguments, evaluation_arguments, dataset_arguments
+from utils.logger import set_color
 
-from pytorch_implementation.evaluator import metric_types, smaller_metrics
-from pytorch_implementation.utils import (
-    get_model,
-    Enum,
-    EvaluatorType,
-    ModelType,
-    InputType,
-    general_arguments,
-    training_arguments,
-    evaluation_arguments,
-    dataset_arguments,
-    set_color,
-)
 
 
 class Config(object):
@@ -251,14 +244,14 @@ class Config(object):
         quick_start_config_path = os.path.join(
             current_path, "../properties/quick_start_config/"
         )
-        context_aware_init = os.path.join(quick_start_config_path, "context-aware.yaml")
-        context_aware_on_ml_100k_init = os.path.join(
-            quick_start_config_path, "context-aware_ml-100k.yaml"
-        )
-        DIN_init = os.path.join(quick_start_config_path, "sequential_DIN.yaml")
-        DIN_on_ml_100k_init = os.path.join(
-            quick_start_config_path, "sequential_DIN_on_ml-100k.yaml"
-        )
+        # # context_aware_init = os.path.join(quick_start_config_path, "context-aware.yaml")
+        # # context_aware_on_ml_100k_init = os.path.join(
+        # #     quick_start_config_path, "context-aware_ml-100k.yaml"
+        # # )
+        # # DIN_init = os.path.join(quick_start_config_path, "sequential_DIN.yaml")
+        # # DIN_on_ml_100k_init = os.path.join(
+        # #     quick_start_config_path, "sequential_DIN_on_ml-100k.yaml"
+        # # )
         sequential_init = os.path.join(quick_start_config_path, "sequential.yaml")
         special_sequential_on_ml_100k_init = os.path.join(
             quick_start_config_path, "special_sequential_on_ml-100k.yaml"
@@ -266,9 +259,9 @@ class Config(object):
         sequential_embedding_model_init = os.path.join(
             quick_start_config_path, "sequential_embedding_model.yaml"
         )
-        knowledge_base_init = os.path.join(
-            quick_start_config_path, "knowledge_base.yaml"
-        )
+        # knowledge_base_init = os.path.join(
+        #     quick_start_config_path, "knowledge_base.yaml"
+        # )
 
         self.internal_config_dict = dict()
         for file in [
@@ -341,6 +334,7 @@ class Config(object):
             self.final_config_dict["MODEL_INPUT_TYPE"] = self.model_class.input_type
         elif "loss_type" in self.final_config_dict:
             if self.final_config_dict["loss_type"] in ["CE"]:
+                self.final_config_dict['train_neg_sample_args'] = None
                 if (
                     self.final_config_dict["MODEL_TYPE"] == ModelType.SEQUENTIAL
                     and self.final_config_dict.get("train_neg_sample_args", None)

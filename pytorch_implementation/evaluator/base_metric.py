@@ -13,7 +13,9 @@ recbole.evaluator.abstract_metric
 """
 
 import torch
-from pytorch_implementation.utils import EvaluatorType
+import sys
+sys.path.append("..")
+from utils.enum_type import EvaluatorType
 
 
 class AbstractMetric(object):

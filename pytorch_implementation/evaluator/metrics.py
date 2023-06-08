@@ -29,9 +29,11 @@ from collections import Counter
 from sklearn.metrics import auc as sk_auc
 from sklearn.metrics import mean_absolute_error, mean_squared_error
 
-from pytorch_implementation.evaluator.utils import _binary_clf_curve
-from pytorch_implementation.evaluator.base_metric import AbstractMetric, TopkMetric, LossMetric
-from pytorch_implementation.utils import EvaluatorType
+from .utils import _binary_clf_curve
+from .base_metric import AbstractMetric, TopkMetric, LossMetric
+import sys
+sys.path.append("..")
+from utils.enum_type import EvaluatorType
 
 # TopK Metrics
 

@@ -18,9 +18,11 @@ from logging import getLogger
 
 import torch
 
-from recbole.data.interaction import Interaction
-from recbole.utils import InputType, FeatureType, FeatureSource, ModelType
-from recbole.data.transform import construct_transform
+import sys
+sys.path.append("../..")
+from data.interaction import Interaction
+from data.transform import construct_transform
+from utils.enum_type import InputType, FeatureType, FeatureSource, ModelType
 
 start_iter = False
 

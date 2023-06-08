@@ -13,6 +13,7 @@ recbole.evaluator.register
 """
 import inspect
 import sys
+from .metrics import *
 
 
 def cluster_info(module_name):
@@ -39,6 +40,7 @@ def cluster_info(module_name):
     """
     smaller_m = []
     m_dict, m_info, m_types = {}, {}, {}
+    
     metric_class = inspect.getmembers(
         sys.modules[module_name],
         lambda x: inspect.isclass(x) and x.__module__ == module_name,
@@ -59,7 +61,7 @@ def cluster_info(module_name):
     return smaller_m, m_info, m_types, m_dict
 
 
-metric_module_name = "recbole.evaluator.metrics"
+metric_module_name = "evaluator.metrics"
 smaller_metrics, metric_information, metric_types, metrics_dict = cluster_info(
     metric_module_name
 )

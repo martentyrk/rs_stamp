@@ -30,19 +30,13 @@ from tqdm import tqdm
 import torch.cuda.amp as amp
 
 from pytorch_implementation.data.interaction import Interaction
-from pytorch_implementation.data.dataloader import FullSortEvalDataLoader
-from pytorch_implementation.evaluator import Evaluator, Collector
-from pytorch_implementation.utils import (
-    ensure_dir,
-    get_local_time,
-    early_stopping,
-    calculate_valid_score,
-    dict2str,
-    EvaluatorType,
-    set_color,
-    get_gpu_usage,
-    WandbLogger,
-)
+from data.dataloader.general_dataloader import FullSortEvalDataLoader
+from evaluator.evaluator import Evaluator
+from evaluator.collector import Collector
+from utils.logger import set_color
+from utils.enum_type import EvaluatorType
+from utils.utils import ensure_dir, get_local_time, get_gpu_usage, dict2str, calculate_valid_score, early_stopping
+from utils.wandblogger import WandbLogger
 from torch.nn.parallel import DistributedDataParallel
 
 class AbstractTrainer(object):

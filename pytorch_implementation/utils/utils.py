@@ -24,7 +24,7 @@ import torch
 import torch.nn as nn
 from texttable import Texttable
 
-from enum_type import ModelType
+from .enum_type import ModelType
 
 
 def get_local_time():
@@ -60,17 +60,17 @@ def get_model(model_name):
         Recommender: model class
     """
     model_submodule = [
-        "general_recommender",
-        "context_aware_recommender",
+        # "general_recommender",
+        # "context_aware_recommender",
         "sequential_recommender",
-        "knowledge_aware_recommender",
-        "exlib_recommender",
+        # "knowledge_aware_recommender",
+        # "exlib_recommender",
     ]
 
     model_file_name = model_name.lower()
     model_module = None
     for submodule in model_submodule:
-        module_path = ".".join(["recbole.model", submodule, model_file_name])
+        module_path = ".".join(["model", submodule, model_file_name])
         if importlib.util.find_spec(module_path, __name__):
             model_module = importlib.import_module(module_path, __name__)
             break

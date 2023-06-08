@@ -2,8 +2,8 @@ import argparse
 from logging import getLogger
 from utils.utils import init_seed
 from utils.logger import init_logger, set_color
-from config import Config
-from model.stamp import STAMP
+from config.configurator import Config
+from model.sequential_recommender.stamp import STAMP
 from data.utils import get_dataloader, create_dataset
 from data.cikm16data_read import load_data2
 from data.rsyc15data_read_p import load_data_p

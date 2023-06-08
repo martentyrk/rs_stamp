@@ -13,9 +13,11 @@ recbole.data.dataloader.user_dataloader
 """
 import torch
 from logging import getLogger
-from recbole.data.dataloader.abstract_dataloader import AbstractDataLoader
-from recbole.data.interaction import Interaction
+from .abstract_dataloader import AbstractDataLoader
 import numpy as np
+import sys
+sys.path.append("../..")
+from data.interaction import Interaction
 
 
 class UserDataLoader(AbstractDataLoader):

@@ -8,8 +8,8 @@ recbole.evaluator.evaluator
 #####################################
 """
 
-from pytorch_implementation.evaluator.register import metrics_dict
-from pytorch_implementation.evaluator.collector import DataStruct
+from .register import metrics_dict
+from .collector import DataStruct
 from collections import OrderedDict
 
 

@@ -12,7 +12,7 @@ recbole.evaluator.collector
 ################################################
 """
 
-from recbole.evaluator.register import Register
+from .register import Register
 import torch
 import copy
 
