@@ -1,5 +1,5 @@
 import torch 
-from utils import Randomizer
+from utils.randomizer import Randomizer
 
 class LinearLayer_3dim():
     '''

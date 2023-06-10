@@ -221,7 +221,8 @@ def option_parse():
         action='store',
         type='string',
         dest="model_path",
-        default='/home/herb/code/WWW18/ckpt/seq2seqlm.ckpt-3481-201709251759-lap'
+        #paths['root_path']+paths['project_name']+'/tensorflow
+        default='/output/saved_models/'
     )
     parser.add_option(
         "-i",
@@ -258,23 +259,30 @@ def main(options, modelconf="config/model.conf"):
     class_num = options.classnum
     is_train = not options.not_train
     is_save = not options.not_save_model
-    model_path = options.model_path
+    model_path = options.model_path#paths['root_path']+paths['project_name']+options.model_path+model+dataset+'.ckpt'
+    print(model_path)
     input_data = options.input_data
     epoch = options.epoch
 
     module, obj, config = load_conf(model, modelconf)
     config['model'] = model
-    print(model)
     config['dataset'] = dataset
     config['class_num'] = class_num
     config['nepoch'] = epoch
+    config['model_save_path'] = model_path
+    print(config)
     train_data, test_data = load_tt_datas(config, reload)
+    
+    #print(module)
+    # model.STAMP_cikm
+    
     module = __import__(module, fromlist=True)
 
+    #print(module)
+    # <module 'model.STAMP_cikm' from '/home/andre/Documents/GitHub/rs_stamp/tensorflow/model/STAMP_cikm.py'> 
+
     # setup randomer
-
     Randomer.set_stddev(config['stddev'])
-
     with tf.Graph().as_default():
         # build model
         model = getattr(module, obj)(config)
