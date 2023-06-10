@@ -260,7 +260,7 @@ def main(options, modelconf="config/model.conf"):
     is_train = not options.not_train
     is_save = not options.not_save_model
     model_path = options.model_path#paths['root_path']+paths['project_name']+options.model_path+model+dataset+'.ckpt'
-    print(model_path)
+
     input_data = options.input_data
     epoch = options.epoch
 
@@ -270,6 +270,9 @@ def main(options, modelconf="config/model.conf"):
     config['class_num'] = class_num
     config['nepoch'] = epoch
     config['model_save_path'] = model_path
+    
+    # metric @ k
+    config['cut_off'] = 10
     print(config)
     train_data, test_data = load_tt_datas(config, reload)
     
