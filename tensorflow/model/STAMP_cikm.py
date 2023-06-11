@@ -330,7 +330,6 @@ class Seq2SeqAttNN(NN):
 
         # calculate the acc
         print('Measuring Recall@{} and MRR@{}'.format(self.cut_off, self.cut_off))
-
         mrr, recall = [], []
         c_loss =[]
         batch = 0
