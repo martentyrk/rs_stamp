@@ -1,15 +1,13 @@
 #coding=utf-8
 import numpy as np
 import tensorflow.compat.v1 as tf
-tf.enable_eager_execution()
 tf.disable_v2_behavior()
 import tensorflow_ranking as tfr
 import time
 from basic_layer.NN_adam import NN
 from util.Printer import TIPrint
 from util.batcher.equal_len.batcher_p import batcher
-from util.AccCalculater import cau_recall_mrr_org
-from util.AccCalculater import cau_samples_recall_mrr
+from util.AccCalculater import cau_recall_mrr_org, cau_samples_recall_mrr, mapk
 from util.Pooler import pooler
 from basic_layer.FwNn3AttLayer import FwNnAttLayer
 from util.FileDumpLoad import dump_file
@@ -427,11 +425,9 @@ class Seq2SeqAttNN(NN):
                         test_data.pack_ext_matrix('alpha', alpha, tmp_batch_ids)
                         test_data.pack_preds(ranks, tmp_batch_ids)
                         c_loss += list(loss)
-                        test1 = np.array(batch_out).reshape(-1, 1)
-                        test2 = np.array(ranks).reshape(-1, 1)
-                        calc_map = map_metric(test1, test2)
+                        calc_map = mapk(batch_out, ranks, self.cut_off)
                         print(calc_map)
-                        map_val += calc_map.numpy()
+                        map_val += calc_map
                         recall += t_r
                         mrr += t_m
                         batch += 1
@@ -470,10 +466,8 @@ class Seq2SeqAttNN(NN):
                     c_loss += list(loss)
                     recall += t_r
                     mrr += t_m
-                    test1 = np.array(batch_out).reshape(-1, 1)
-                    test2 = np.array(ranks).reshape(-1, 1)
-                    calc_map = map_metric(test1, test2)
-                    print(calc_map)
+                    calc_map = average_precision_score(batch_out, preds) 
+                    
                     map_val += calc_map.numpy()
                     batch += 1
         r, m =cau_samples_recall_mrr(test_data.samples,self.cut_off)

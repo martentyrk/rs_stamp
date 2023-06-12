@@ -83,3 +83,26 @@ def new_cau_samples_recall_mrr(samples,cutoff=20):
     recall = recall/ num
     mrr = mrr/num
     return recall , mrr
+
+
+# PRECISION AT K
+def apk(gt, predicted, k):
+    if not gt:
+        return 0.0
+
+    if len(predicted)>k:
+        predicted = predicted[:k]
+
+    score = 0.0
+    num_hits = 0.0
+
+    for i, pred in enumerate(predicted):
+        if pred in gt and pred not in predicted[:i]:
+            num_hits += 1.0
+            score += num_hits / (i+1.0)
+
+    return score / min(len(gt), k)
+
+
+def mapk(gt, preds, k):
+    return np.mean([apk(a,p,k) for a,p in zip(gt, preds)])
