@@ -1,4 +1,5 @@
 import time
+import numpy as np
 def cau_acc(pred, labels):
     '''
     Calculate the accuracy. 
@@ -40,10 +41,9 @@ def cau_recall_mrr_org(preds,labels,cutoff = 20):
     recall = []
     mrr = []
     rank_l = []
-
     for batch, b_label in zip(preds,labels):
-
         ranks = (batch[b_label] < batch).sum() +1
+        
         rank_l.append(ranks)
         recall.append(ranks <= cutoff)
         mrr.append(1/ranks if ranks <= cutoff else 0.0)

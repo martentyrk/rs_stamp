@@ -1,6 +1,7 @@
 #coding=utf-8
 import numpy as np
 import tensorflow.compat.v1 as tf
+tf.enable_eager_execution()
 tf.disable_v2_behavior()
 import tensorflow_ranking as tfr
 import time
@@ -329,11 +330,11 @@ class Seq2SeqAttNN(NN):
                     {'recall': max_recall, 'mrr': max_mrr}, True)
 
     def test(self,sess,test_data):
-        dcg = tfr.keras.metrics.DCGMetric()
+        map_metric = tfr.keras.metrics.MeanAveragePrecisionMetric(topn=self.cut_off)
         # calculate the acc
-        print('Measuring Recall@{} and MRR@{} and NDCG@{}'.format(self.cut_off, self.cut_off, self.cut_off))
+        print('Measuring Recall@{} and MRR@{} and MAP@{}'.format(self.cut_off, self.cut_off, self.cut_off))
 
-        mrr, recall, ndcg = [], [], []
+        mrr, recall, map_val = [], [], []
         c_loss =[]
         batch = 0
         bt = batcher(
@@ -381,17 +382,16 @@ class Seq2SeqAttNN(NN):
                             feed_dict=feed_dict
                         )
                         t_r, t_m, ranks = cau_recall_mrr_org(preds, batch_out, cutoff=self.cut_off)
-                        print(preds)
-                        print(batch_out)
-                        print(preds.shape)
-                        print(batch_out.shape)
-                        # ndcg_val = dcg(batch_out, preds).numpy()
                         test_data.pack_ext_matrix('alpha', alpha, tmp_batch_ids)
                         test_data.pack_preds(ranks, tmp_batch_ids)
+                        test1 = np.array(batch_out).reshape(-1, 1)
+                        test2 = np.array(ranks).reshape(-1, 1)
+                        calc_map = map_metric(test1, test2)
+                        print(calc_map, 'calc map')
+                        map_val += calc_map
                         c_loss += list(loss)
                         recall += t_r
                         mrr += t_m
-                        # ndcg += ndcg_val
                         batch += 1
                     i += self.batch_size
                 if remain > 0:
@@ -416,7 +416,6 @@ class Seq2SeqAttNN(NN):
                             self.last_inputs: batch_last,
                             self.lab_input: batch_out,
                             self.sequence_length: batch_seq_l
-
                         }
 
                         # train
@@ -425,13 +424,16 @@ class Seq2SeqAttNN(NN):
                             feed_dict=feed_dict
                         )
                         t_r, t_m, ranks = cau_recall_mrr_org(preds, batch_out, cutoff=self.cut_off)
-                        ndcg_val = dcg(batch_out, preds).numpy()
                         test_data.pack_ext_matrix('alpha', alpha, tmp_batch_ids)
                         test_data.pack_preds(ranks, tmp_batch_ids)
                         c_loss += list(loss)
+                        test1 = np.array(batch_out).reshape(-1, 1)
+                        test2 = np.array(ranks).reshape(-1, 1)
+                        calc_map = map_metric(test1, test2)
+                        print(calc_map)
+                        map_val += calc_map.numpy()
                         recall += t_r
                         mrr += t_m
-                        ndcg += ndcg_val
                         batch += 1
             else:
                 tmp_in_data = batch_data['in_idxes']
@@ -463,15 +465,18 @@ class Seq2SeqAttNN(NN):
                         feed_dict=feed_dict
                     )
                     t_r, t_m, ranks = cau_recall_mrr_org(preds, batch_out, cutoff=self.cut_off)
-                    ndcg_val = dcg(batch_out, preds).numpy()
                     test_data.pack_ext_matrix('alpha', alpha, tmp_batch_ids)
                     test_data.pack_preds(ranks, tmp_batch_ids)
                     c_loss += list(loss)
                     recall += t_r
                     mrr += t_m
-                    ndcg += ndcg_val
+                    test1 = np.array(batch_out).reshape(-1, 1)
+                    test2 = np.array(ranks).reshape(-1, 1)
+                    calc_map = map_metric(test1, test2)
+                    print(calc_map)
+                    map_val += calc_map.numpy()
                     batch += 1
         r, m =cau_samples_recall_mrr(test_data.samples,self.cut_off)
         print (r,m)
         print (np.mean(c_loss))
-        return  np.mean(recall), np.mean(mrr), np.mean(ndcg)
+        return  np.mean(recall), np.mean(mrr), np.mean(map_val)
