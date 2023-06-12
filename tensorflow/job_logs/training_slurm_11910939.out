@@ -1,0 +1,86 @@
+/var/spool/slurm/slurmd/job11910939/slurm_script: line 14: activate: No such file or directory
+2023-06-11 14:34:35.038232: I tensorflow/tsl/cuda/cudart_stub.cc:28] Could not find cuda drivers on your machine, GPU will not be used.
+2023-06-11 14:34:35.086725: I tensorflow/tsl/cuda/cudart_stub.cc:28] Could not find cuda drivers on your machine, GPU will not be used.
+2023-06-11 14:34:35.087231: I tensorflow/core/platform/cpu_feature_guard.cc:182] This TensorFlow binary is optimized to use available CPU instructions in performance-critical operations.
+To enable the following instructions: AVX2 AVX512F FMA, in other operations, rebuild TensorFlow with the appropriate compiler flags.
+2023-06-11 14:34:36.156976: W tensorflow/compiler/tf2tensorrt/utils/py_utils.cc:38] TF-TRT Warning: Could not find TensorRT
+WARNING:tensorflow:From /home/lcur2471/.conda/envs/rs_env/lib/python3.9/site-packages/tensorflow/python/compat/v2_compat.py:107: disable_resource_variables (from tensorflow.python.ops.variable_scope) is deprecated and will be removed in a future version.
+Instructions for updating:
+non-resource variables are not supported in the long term
+WARNING:tensorflow:Variable *= will be deprecated. Use `var.assign(var * other)` if you want assignment to the variable value or `x = x * y` if you want a new python Tensor object.
+WARNING:tensorflow:From /home/lcur2471/.conda/envs/rs_env/lib/python3.9/site-packages/tensorflow/python/util/dispatch.py:1176: div (from tensorflow.python.ops.math_ops) is deprecated and will be removed in a future version.
+Instructions for updating:
+Deprecated in favor of operator or tf.math.divide.
+2023-06-11 14:34:43.358416: W tensorflow/core/common_runtime/gpu/gpu_device.cc:1956] Cannot dlopen some GPU libraries. Please make sure the missing libraries mentioned above are installed properly if you would like to use GPU. Follow the guide at https://www.tensorflow.org/install/gpu for how to download and setup the required libraries for your platform.
+Skipping registering GPU devices...
+2023-06-11 14:34:43.409851: I tensorflow/compiler/mlir/mlir_graph_optimization_pass.cc:353] MLIR V1 optimization pass is not enabled
+stamp_cikm
+not reload the datasets.
+cikm16
+read finish
+sort finish
+list finish
+I am reading
+id: 186669
+session_id: 600684
+items: [22521, 2908, 2908, 21741]
+click_items: [42906, 33312, 33312, 5227]
+out: [2908, 2908, 21741]
+in: [22521, 2908, 2908]
+label: []
+
+43098
+read finish
+sort finish
+list finish
+I am reading
+id: 15962
+session_id: 600674
+items: [19464, 21211, 19599]
+click_items: [1152, 124642, 106930]
+out: [21211, 19599]
+in: [19464, 21211]
+label: []
+
+43098
+-----
+cikm16
+Epoch0	loss: 7.499320
+Measuring Recall@20 and MRR@20 and NDCG@20
+Traceback (most recent call last):
+  File "/home/lcur2471/rs_stamp/tensorflow/cmain.py", line 309, in <module>
+    main(options)
+  File "/home/lcur2471/rs_stamp/tensorflow/cmain.py", line 291, in main
+    model.train(sess, train_data, test_data, saver, threshold_acc=config['cikm_threshold_acc'])
+  File "/home/lcur2471/rs_stamp/tensorflow/model/STAMP_cikm.py", line 317, in train
+    recall, mrr = self.test(sess, test_data)
+  File "/home/lcur2471/rs_stamp/tensorflow/model/STAMP_cikm.py", line 384, in test
+    ndcg_val = dcg(batch_out, preds).numpy()
+  File "/home/lcur2471/.conda/envs/rs_env/lib/python3.9/site-packages/keras/metrics/base_metric.py", line 210, in __call__
+    return distributed_training_utils.call_replica_local_fn(
+  File "/home/lcur2471/.conda/envs/rs_env/lib/python3.9/site-packages/keras/distribute/distributed_training_utils.py", line 62, in call_replica_local_fn
+    return fn(*args, **kwargs)
+  File "/home/lcur2471/.conda/envs/rs_env/lib/python3.9/site-packages/keras/metrics/base_metric.py", line 187, in replica_local_fn
+    update_op = self.update_state(*args, **kwargs)
+  File "/home/lcur2471/.conda/envs/rs_env/lib/python3.9/site-packages/keras/utils/metrics_utils.py", line 77, in decorated
+    update_op = update_state_fn(*args, **kwargs)
+  File "/home/lcur2471/.conda/envs/rs_env/lib/python3.9/site-packages/tensorflow/python/util/traceback_utils.py", line 153, in error_handler
+    raise e.with_traceback(filtered_tb) from None
+  File "/scratch/__autograph_generated_fileqdxfm6xu.py", line 28, in tf__update_state
+    (per_list_metric_val, per_list_metric_weights) = ag__.converted_call(ag__.ld(self)._metric.compute, (ag__.ld(y_true), ag__.ld(y_pred), ag__.ld(sample_weight)), None, fscope)
+  File "/scratch/__autograph_generated_file5i5vf4ws.py", line 44, in tf__compute
+    (labels, predictions, weights, mask) = ag__.converted_call(ag__.ld(self)._prepare_and_validate_params, (ag__.ld(labels), ag__.ld(predictions), ag__.ld(weights), ag__.ld(mask)), None, fscope)
+  File "/scratch/__autograph_generated_filedqourg0u.py", line 44, in tf___prepare_and_validate_params
+    ag__.converted_call(ag__.converted_call(ag__.ld(predictions).get_shape, (), None, fscope).assert_is_compatible_with, (ag__.converted_call(ag__.ld(example_weights).get_shape, (), None, fscope),), None, fscope)
+ValueError: in user code:
+
+    File "/home/lcur2471/.conda/envs/rs_env/lib/python3.9/site-packages/tensorflow_ranking/python/keras/metrics.py", line 190, in update_state  *
+        per_list_metric_val, per_list_metric_weights = self._metric.compute(
+    File "/home/lcur2471/.conda/envs/rs_env/lib/python3.9/site-packages/tensorflow_ranking/python/metrics_impl.py", line 289, in compute  *
+        labels, predictions, weights, mask = self._prepare_and_validate_params(
+    File "/home/lcur2471/.conda/envs/rs_env/lib/python3.9/site-packages/tensorflow_ranking/python/metrics_impl.py", line 253, in _prepare_and_validate_params  *
+        predictions.get_shape().assert_is_compatible_with(
+
+    ValueError: Shapes (512, 43097) and (512,) are incompatible
+
+srun: error: r28n2: task 0: Exited with exit code 1

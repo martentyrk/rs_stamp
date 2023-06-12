@@ -2,6 +2,7 @@
 import numpy as np
 import tensorflow.compat.v1 as tf
 tf.disable_v2_behavior()
+import tensorflow_ranking as tfr
 import time
 from basic_layer.NN_adam import NN
 from util.Printer import TIPrint
@@ -11,6 +12,7 @@ from util.AccCalculater import cau_samples_recall_mrr
 from util.Pooler import pooler
 from basic_layer.FwNn3AttLayer import FwNnAttLayer
 from util.FileDumpLoad import dump_file
+
 
 
 class Seq2SeqAttNN(NN):
@@ -327,11 +329,11 @@ class Seq2SeqAttNN(NN):
                     {'recall': max_recall, 'mrr': max_mrr}, True)
 
     def test(self,sess,test_data):
-
+        dcg = tfr.keras.metrics.DCGMetric()
         # calculate the acc
-        print('Measuring Recall@{} and MRR@{}'.format(self.cut_off, self.cut_off))
+        print('Measuring Recall@{} and MRR@{} and NDCG@{}'.format(self.cut_off, self.cut_off, self.cut_off))
 
-        mrr, recall = [], []
+        mrr, recall, ndcg = [], [], []
         c_loss =[]
         batch = 0
         bt = batcher(
@@ -379,11 +381,17 @@ class Seq2SeqAttNN(NN):
                             feed_dict=feed_dict
                         )
                         t_r, t_m, ranks = cau_recall_mrr_org(preds, batch_out, cutoff=self.cut_off)
+                        print(preds)
+                        print(batch_out)
+                        print(preds.shape)
+                        print(batch_out.shape)
+                        # ndcg_val = dcg(batch_out, preds).numpy()
                         test_data.pack_ext_matrix('alpha', alpha, tmp_batch_ids)
                         test_data.pack_preds(ranks, tmp_batch_ids)
                         c_loss += list(loss)
                         recall += t_r
                         mrr += t_m
+                        # ndcg += ndcg_val
                         batch += 1
                     i += self.batch_size
                 if remain > 0:
@@ -417,11 +425,13 @@ class Seq2SeqAttNN(NN):
                             feed_dict=feed_dict
                         )
                         t_r, t_m, ranks = cau_recall_mrr_org(preds, batch_out, cutoff=self.cut_off)
+                        ndcg_val = dcg(batch_out, preds).numpy()
                         test_data.pack_ext_matrix('alpha', alpha, tmp_batch_ids)
                         test_data.pack_preds(ranks, tmp_batch_ids)
                         c_loss += list(loss)
                         recall += t_r
                         mrr += t_m
+                        ndcg += ndcg_val
                         batch += 1
             else:
                 tmp_in_data = batch_data['in_idxes']
@@ -453,13 +463,15 @@ class Seq2SeqAttNN(NN):
                         feed_dict=feed_dict
                     )
                     t_r, t_m, ranks = cau_recall_mrr_org(preds, batch_out, cutoff=self.cut_off)
+                    ndcg_val = dcg(batch_out, preds).numpy()
                     test_data.pack_ext_matrix('alpha', alpha, tmp_batch_ids)
                     test_data.pack_preds(ranks, tmp_batch_ids)
                     c_loss += list(loss)
                     recall += t_r
                     mrr += t_m
+                    ndcg += ndcg_val
                     batch += 1
         r, m =cau_samples_recall_mrr(test_data.samples,self.cut_off)
         print (r,m)
         print (np.mean(c_loss))
-        return  np.mean(recall), np.mean(mrr)
+        return  np.mean(recall), np.mean(mrr), np.mean(ndcg)

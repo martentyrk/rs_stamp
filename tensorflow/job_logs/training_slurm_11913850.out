@@ -1,0 +1,75 @@
+/var/spool/slurm/slurmd/job11913850/slurm_script: line 14: activate: No such file or directory
+2023-06-12 14:34:14.963128: I tensorflow/tsl/cuda/cudart_stub.cc:28] Could not find cuda drivers on your machine, GPU will not be used.
+2023-06-12 14:34:15.009285: I tensorflow/tsl/cuda/cudart_stub.cc:28] Could not find cuda drivers on your machine, GPU will not be used.
+2023-06-12 14:34:15.009823: I tensorflow/core/platform/cpu_feature_guard.cc:182] This TensorFlow binary is optimized to use available CPU instructions in performance-critical operations.
+To enable the following instructions: AVX2 AVX512F FMA, in other operations, rebuild TensorFlow with the appropriate compiler flags.
+2023-06-12 14:34:16.178641: W tensorflow/compiler/tf2tensorrt/utils/py_utils.cc:38] TF-TRT Warning: Could not find TensorRT
+WARNING:tensorflow:From /home/lcur2471/.conda/envs/rs_env/lib/python3.9/site-packages/tensorflow/python/compat/v2_compat.py:107: disable_resource_variables (from tensorflow.python.ops.variable_scope) is deprecated and will be removed in a future version.
+Instructions for updating:
+non-resource variables are not supported in the long term
+WARNING:tensorflow:Variable *= will be deprecated. Use `var.assign(var * other)` if you want assignment to the variable value or `x = x * y` if you want a new python Tensor object.
+WARNING:tensorflow:From /home/lcur2471/.conda/envs/rs_env/lib/python3.9/site-packages/tensorflow/python/util/dispatch.py:1176: div (from tensorflow.python.ops.math_ops) is deprecated and will be removed in a future version.
+Instructions for updating:
+Deprecated in favor of operator or tf.math.divide.
+2023-06-12 14:34:22.274609: W tensorflow/core/common_runtime/gpu/gpu_device.cc:1956] Cannot dlopen some GPU libraries. Please make sure the missing libraries mentioned above are installed properly if you would like to use GPU. Follow the guide at https://www.tensorflow.org/install/gpu for how to download and setup the required libraries for your platform.
+Skipping registering GPU devices...
+2023-06-12 14:34:22.360343: I tensorflow/compiler/mlir/mlir_graph_optimization_pass.cc:353] MLIR V1 optimization pass is not enabled
+stamp_cikm
+not reload the datasets.
+cikm16
+read finish
+sort finish
+list finish
+I am reading
+id: 186669
+session_id: 600684
+items: [22521, 2908, 2908, 21741]
+click_items: [42906, 33312, 33312, 5227]
+out: [2908, 2908, 21741]
+in: [22521, 2908, 2908]
+label: []
+
+43098
+read finish
+sort finish
+list finish
+I am reading
+id: 15962
+session_id: 600674
+items: [19464, 21211, 19599]
+click_items: [1152, 124642, 106930]
+out: [21211, 19599]
+in: [19464, 21211]
+label: []
+
+43098
+-----
+cikm16
+Epoch0	loss: 7.677516
+Measuring Recall@20 and MRR@20 and NDCG@20
+[[ 1.9148223   0.8354661   0.25770995 ... -1.7866724  -2.8425972
+  -1.3961524 ]
+ [ 0.92507595 -1.1232967  -1.3147573  ... -3.2469742  -2.1174986
+  -1.9425756 ]
+ [-4.248026   -1.274148   -0.29252973 ... -3.3017383   0.39071736
+  -0.7659889 ]
+ ...
+ [ 1.9837924  -0.20593207  0.19483294 ... -0.04283588 -0.82566047
+  -0.5276147 ]
+ [ 0.03170843 -1.6273448  -0.36937436 ... -0.45447105 -1.2969846
+  -1.3502996 ]
+ [ 0.49450293 -0.5998807  -0.41556886 ... -0.8771548  -1.3180948
+   0.23565884]]
+[15416, 1512, 33391, 402, 8639, 40489, 18277, 34945, 20973, 33353, 35630, 2574, 14594, 21359, 5952, 386, 9521, 24381, 3557, 11444, 27126, 18504, 5300, 26376, 35612, 30603, 12070, 7740, 22708, 9931, 4919, 11587, 19948, 2174, 20854, 37507, 17422, 33907, 10712, 9170, 11941, 26596, 1859, 3436, 242, 23953, 30449, 4070, 29021, 21470, 20470, 18591, 4071, 10620, 9413, 17724, 20895, 5320, 4923, 40257, 24147, 39791, 32472, 10878, 3918, 7043, 4607, 2338, 8486, 22058, 12848, 8086, 3992, 9308, 12059, 3513, 20740, 40742, 7773, 34591, 11411, 16510, 444, 14236, 5477, 11940, 5775, 34094, 3516, 2101, 41175, 7596, 32660, 2335, 7021, 5525, 6717, 14412, 15326, 696, 6822, 21368, 34907, 12990, 3331, 28957, 22708, 10694, 12745, 13892, 444, 7418, 16280, 5800, 10773, 1603, 17319, 1601, 5518, 27818, 119, 25868, 15773, 19247, 1515, 23904, 15652, 3982, 3777, 2873, 1228, 3124, 1374, 673, 2877, 36691, 21219, 13213, 42957, 20939, 7431, 33394, 42129, 5479, 451, 36937, 100, 32721, 10694, 1025, 26437, 10978, 5212, 12599, 6104, 11604, 20757, 20274, 12414, 8754, 3183, 11435, 13589, 21212, 824, 19080, 19125, 101, 19833, 501, 26029, 2214, 5087, 22080, 15325, 4958, 3632, 17591, 3164, 26910, 589, 8534, 2574, 6157, 41165, 42035, 24575, 38345, 3068, 26203, 2338, 6284, 27283, 18505, 10177, 23105, 22460, 25341, 2789, 18272, 17473, 23705, 26553, 418, 1043, 9780, 3910, 31054, 15165, 5622, 19798, 3666, 23815, 13775, 31793, 4215, 19230, 37976, 36136, 25140, 35360, 1734, 2950, 15279, 21731, 7251, 42773, 7899, 18671, 35054, 21073, 835, 10973, 16491, 11633, 31369, 15332, 8674, 1420, 8993, 8493, 20693, 37799, 42519, 7907, 1369, 6287, 7690, 372, 4971, 210, 3382, 4136, 40583, 8905, 5132, 22385, 2980, 37882, 33158, 6862, 1245, 3463, 6503, 2577, 2070, 3277, 18517, 3277, 901, 8537, 22718, 3092, 5793, 16462, 33314, 33071, 6198, 11637, 15212, 5010, 1279, 5664, 17668, 19097, 14521, 9856, 18194, 5871, 11332, 3603, 2769, 1508, 11444, 13280, 68, 3195, 12847, 22385, 1892, 11141, 19976, 21272, 12901, 4392, 6577, 3758, 6033, 28498, 11963, 18061, 4996, 21137, 22542, 13041, 3512, 9668, 14334, 22443, 23787, 7092, 7838, 19134, 7372, 25911, 18707, 32158, 24221, 559, 2786, 4956, 32877, 12736, 7149, 24683, 1303, 2054, 10350, 20315, 20284, 42776, 3462, 103, 20967, 25610, 33427, 41210, 27261, 2916, 14804, 10749, 9619, 5531, 3686, 2188, 537, 21219, 16347, 18891, 39732, 31848, 30542, 23102, 18504, 41838, 31672, 25453, 32675, 3725, 20362, 16098, 23180, 31590, 2724, 2462, 9256, 21461, 5036, 25922, 13661, 1557, 35181, 18309, 1555, 7556, 2151, 5282, 17891, 2349, 2945, 1381, 3030, 4321, 4512, 9172, 2853, 25536, 41273, 21266, 39923, 395, 1069, 14413, 23322, 13522, 16489, 22548, 42337, 13272, 38453, 3277, 12192, 2214, 138, 19888, 462, 382, 40305, 22555, 4392, 1058, 28466, 15988, 4423, 753, 9270, 2891, 29488, 1262, 29668, 32082, 23826, 42175, 32796, 4777, 5624, 21397, 21271, 2794, 22246, 20035, 32083, 19787, 2492, 17635, 959, 16789, 2282, 28849, 6200, 16799, 20316, 325, 15274, 1279, 10851, 38773, 39286, 1557, 5144, 8916, 8871, 11763, 18186, 27751, 21758, 17643, 5518, 2249, 26263, 15968, 325, 4914, 20013, 1398, 20885, 24729, 800, 20274, 5663, 12362, 14556, 24933, 3177, 2786, 15738, 3974, 9115, 8674, 10394, 1220, 2660, 10665, 26158, 19670, 323, 22443, 3675, 3609, 12692, 12920, 12988, 415, 27719, 2704, 20377, 2152, 1031, 1989, 40601, 9531, 2833]
+(512, 43097)
+Traceback (most recent call last):
+  File "/home/lcur2471/rs_stamp/tensorflow/cmain.py", line 309, in <module>
+    main(options)
+  File "/home/lcur2471/rs_stamp/tensorflow/cmain.py", line 291, in main
+    model.train(sess, train_data, test_data, saver, threshold_acc=config['cikm_threshold_acc'])
+  File "/home/lcur2471/rs_stamp/tensorflow/model/STAMP_cikm.py", line 317, in train
+    recall, mrr = self.test(sess, test_data)
+  File "/home/lcur2471/rs_stamp/tensorflow/model/STAMP_cikm.py", line 387, in test
+    print(batch_out.shape)
+AttributeError: 'list' object has no attribute 'shape'
+srun: error: r28n2: task 0: Exited with exit code 1

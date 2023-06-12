@@ -22,17 +22,16 @@ root_path = paths['root_path']
 project_name = paths['project_name']
 
 # the pretreatment data path.
-rsc15_train = root_path + project_name +'/datas/rsc15/processed/rsc15_train_full.txt'
-rsc15_test = root_path + project_name +'/datas/rsc15/processed/rsc15_test.txt'
+rsc15_train = root_path + project_name +'/tensorflow/datas/rsc15/rsc15_train_full.txt'
+rsc15_test = root_path + project_name +'/tensorflow/datas/rsc15/rsc15_test.txt'
 mid_rsc15_train_data = "rsc15_train.data"
 mid_rsc15_test_data = "rsc15_test.data"
 mid_rsc15_emb_dict = "rsc15_emb_dict.data"
 mid_rsc15_4_emb_dict = "rsc15_4_emb_dict.data"
 mid_rsc15_64_emb_dict = "rsc15_64_emb_dict.data"
 
-
-cikm16_train = root_path + project_name +'/datas/cikm16/processed/cikm16_train_full.txt'
-cikm16_test = root_path + project_name +'/datas/cikm16/processed/cikm16_test.txt'
+cikm16_train = root_path + project_name +'/tensorflow/datas/cikm16/cmki16_train_full.txt'
+cikm16_test = root_path + project_name +'/tensorflow/datas/cikm16/cmki16_test.txt'
 mid_cikm16_emb_dict = "mid_datacikm16_emb_dict.data"
 
 def load_tt_datas(config={}, reload=True):
@@ -117,7 +116,7 @@ def load_tt_datas(config={}, reload=True):
             # emb_dict = load_random(n_items, edim=config['hidden_size'], init_std=config['emb_stddev'])
             # path = 'datas/train_emb/'
             # emb_dict = load_file(path + "rsc15_64_emb.data")
-            path = '../datas/rsc15/embeddings/'
+            path = '/home/lcur2471/rs_stamp/tensorflow/datas/'
             emb_dict = load_file(path+mid_rsc15_64_emb_dict)
             config['pre_embedding'] = emb_dict[0]
 
@@ -131,7 +130,7 @@ def load_tt_datas(config={}, reload=True):
                 class_num=config['class_num']
             )
             config["n_items"] = n_items-1
-            path = '../datas/rsc15/embeddings/'
+            path = '/home/lcur2471/rs_stamp/tensorflow/datas/'
             emb_dict = load_file(path + mid_cikm16_emb_dict)
             # path = 'datas/train_emb/'
             # emb_dict = load_file(path + "cikm16_emb.data")
@@ -304,7 +303,6 @@ def main(options, modelconf="config/model.conf"):
                     sent_data = test_data
                 saver.restore(sess, model_path)
                 model.test(sess, sent_data)
-
 
 if __name__ == '__main__':
     options = option_parse()

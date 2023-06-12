@@ -1,0 +1,74 @@
+/var/spool/slurm/slurmd/job11913844/slurm_script: line 14: activate: No such file or directory
+2023-06-12 14:27:26.167319: I tensorflow/tsl/cuda/cudart_stub.cc:28] Could not find cuda drivers on your machine, GPU will not be used.
+2023-06-12 14:27:26.213398: I tensorflow/tsl/cuda/cudart_stub.cc:28] Could not find cuda drivers on your machine, GPU will not be used.
+2023-06-12 14:27:26.213990: I tensorflow/core/platform/cpu_feature_guard.cc:182] This TensorFlow binary is optimized to use available CPU instructions in performance-critical operations.
+To enable the following instructions: AVX2 AVX512F FMA, in other operations, rebuild TensorFlow with the appropriate compiler flags.
+2023-06-12 14:27:27.435609: W tensorflow/compiler/tf2tensorrt/utils/py_utils.cc:38] TF-TRT Warning: Could not find TensorRT
+WARNING:tensorflow:From /home/lcur2471/.conda/envs/rs_env/lib/python3.9/site-packages/tensorflow/python/compat/v2_compat.py:107: disable_resource_variables (from tensorflow.python.ops.variable_scope) is deprecated and will be removed in a future version.
+Instructions for updating:
+non-resource variables are not supported in the long term
+WARNING:tensorflow:Variable *= will be deprecated. Use `var.assign(var * other)` if you want assignment to the variable value or `x = x * y` if you want a new python Tensor object.
+WARNING:tensorflow:From /home/lcur2471/.conda/envs/rs_env/lib/python3.9/site-packages/tensorflow/python/util/dispatch.py:1176: div (from tensorflow.python.ops.math_ops) is deprecated and will be removed in a future version.
+Instructions for updating:
+Deprecated in favor of operator or tf.math.divide.
+2023-06-12 14:27:33.464998: W tensorflow/core/common_runtime/gpu/gpu_device.cc:1956] Cannot dlopen some GPU libraries. Please make sure the missing libraries mentioned above are installed properly if you would like to use GPU. Follow the guide at https://www.tensorflow.org/install/gpu for how to download and setup the required libraries for your platform.
+Skipping registering GPU devices...
+2023-06-12 14:27:33.501357: I tensorflow/compiler/mlir/mlir_graph_optimization_pass.cc:353] MLIR V1 optimization pass is not enabled
+stamp_cikm
+not reload the datasets.
+cikm16
+read finish
+sort finish
+list finish
+I am reading
+id: 186669
+session_id: 600684
+items: [22521, 2908, 2908, 21741]
+click_items: [42906, 33312, 33312, 5227]
+out: [2908, 2908, 21741]
+in: [22521, 2908, 2908]
+label: []
+
+43098
+read finish
+sort finish
+list finish
+I am reading
+id: 15962
+session_id: 600674
+items: [19464, 21211, 19599]
+click_items: [1152, 124642, 106930]
+out: [21211, 19599]
+in: [19464, 21211]
+label: []
+
+43098
+-----
+cikm16
+Epoch0	loss: 8.112684
+Measuring Recall@20 and MRR@20 and NDCG@20
+[[-0.2792439   0.21171717 -2.250975   ...  0.25620022 -0.76924574
+  -0.2034688 ]
+ [-0.6632672  -1.2250663  -2.0052161  ... -0.00613767  1.5183487
+   1.4617631 ]
+ [ 0.21136187  1.4881678  -0.13702928 ...  0.9428756   1.3841653
+   1.3051782 ]
+ ...
+ [ 3.5762599   2.4549313   3.2558122  ... -1.3608313  -1.8968973
+  -2.1344476 ]
+ [ 0.20564616 -0.6943926  -2.1592853  ... -1.4417442  -1.9044296
+  -2.3549762 ]
+ [-1.153535   -2.6643848  -1.7988284  ...  0.6314766   1.0221913
+   1.1398904 ]]
+[28865, 40489, 39038, 16026, 15279, 13661, 6577, 5531, 9115, 18861, 2724, 35248, 2214, 19134, 22443, 28498, 15738, 37059, 2238, 2950, 15361, 12296, 1381, 4325, 33, 42478, 3331, 22555, 22080, 41273, 94, 7418, 19888, 2577, 12074, 19976, 33655, 34907, 21302, 22113, 12059, 7541, 4971, 38773, 4615, 23972, 21106, 10665, 559, 14943, 1025, 11941, 10749, 11940, 12059, 17384, 24221, 1512, 31802, 24707, 5056, 27009, 16462, 5871, 36937, 22460, 242, 325, 40322, 27751, 3277, 26553, 2690, 25690, 10265, 6198, 801, 5793, 13041, 13425, 23953, 3586, 17775, 35612, 801, 36136, 3675, 19858, 20276, 4931, 2214, 22386, 318, 5518, 6591, 1964, 4321, 23118, 5087, 22140, 6404, 3015, 37280, 32495, 9170, 2299, 26437, 11141, 31537, 1299, 3277, 2152, 28350, 25381, 32660, 42776, 9521, 10854, 3068, 18445, 34405, 19080, 3473, 23180, 9668, 12918, 8674, 19209, 16620, 14413, 14594, 15301, 31054, 2138, 4344, 523, 26596, 27503, 15212, 2378, 18231, 14334, 16217, 16799, 40742, 5320, 15773, 15803, 42082, 27283, 19247, 5144, 3891, 9341, 3821, 5832, 12849, 9121, 325, 391, 1734, 3124, 4914, 28146, 16789, 9619, 18517, 15254, 18671, 23815, 11637, 8493, 2958, 20693, 31848, 14308, 20967, 27489, 1900, 16231, 800, 994, 13999, 2279, 11257, 2314, 2215, 22548, 3603, 5132, 10878, 15292, 14652, 1603, 9172, 26263, 1420, 10539, 26158, 2853, 3092, 208, 19833, 2786, 31540, 2318, 18277, 493, 6717, 1705, 34034, 2253, 2789, 968, 4579, 5872, 24031, 9931, 14316, 16491, 12920, 8486, 15510, 10957, 6413, 32647, 11609, 17705, 38168, 14521, 8021, 1558, 18061, 19097, 444, 8990, 26097, 1043, 3709, 9413, 42337, 28957, 34794, 27560, 25610, 37252, 8916, 12964, 6217, 18113, 27719, 1778, 4527, 22471, 23507, 100, 37507, 11332, 17422, 32731, 27721, 5910, 15332, 13350, 8000, 382, 3494, 563, 21856, 12745, 16352, 13905, 21397, 32083, 18591, 29092, 7690, 25083, 2724, 21296, 9822, 5479, 8905, 415, 23904, 6953, 2418, 32227, 24147, 559, 41316, 1442, 20895, 1220, 23944, 4971, 5704, 625, 16541, 25626, 10394, 16510, 20877, 15652, 36488, 3686, 417, 22865, 13548, 2945, 138, 10620, 9098, 2214, 33158, 1997Traceback (most recent call last):
+  File "/home/lcur2471/rs_stamp/tensorflow/cmain.py", line 309, in <module>
+3, 14268, 39732, 19166, 28849, 3654, 1738, 13574, 3826, 15901, 33071, 15301, 8510, 3609, 4643, 21359, 32459, 16123, 23608, 20854, 29488, 42519, 22246, 6393, 11987, 41175, 42082, 21738, 21026, 1202, 35277, 38276, 5614, 6496, 1978, 33403, 5669, 2249, 402, 561, 3777, 7326, 6033, 7596, 10973, 737, 2980, 16280, 34630, 3516, 34395, 5782, 21603, 21269, 8818, 423, 1765, 884, 41994, 26376, 9557, 9099, 138, 10704, 5663, 38411, 30307, 4390, 6714, 32472, 9115, 28116, 41111, 2418, 11633, 12414, 11464, 3030, 8993, 537, 2769, 34591, 5775, 21883, 696, 7838, 34911, 3463, 2832, 2248, 3982, 16428, 32343, 23851, 16489, 28896, 3974, 42199, 3966, 31590, 6635, 28055, 1630, 13122, 2151, 11550, 21451, 11435, 19787, 23798, 24611, 5300, 18814, 3556, 10929, 6775, 20757, 835, 30509, 2950, 1573, 11, 12740, 26126, 22215, 10851, 6157, 371, 28466, 9573, 6285, 26385, 138, 3425, 824, 282, 20377, 15164, 2349, 537, 2833, 2070, 19670, 42652, 11444, 17643, 17392, 4278, 1819, 7149, 27722, 18891, 16732, 11604, 5749, 3382, 1245, 675, 10712, 103, 395, 41471, 3918, 2338, 12847, 2634, 9162, 12362, 22443, 33314, 14309, 32593, 21576, 42175, 2450, 1603, 4215, 18186, 20362, 418, 28113, 3512, 21461, 34945, 19465, 5087, 7899, 35004, 33162, 10350, 23193, 18505, 451, 21266, 103, 7997, 39286]
+    main(options)
+  File "/home/lcur2471/rs_stamp/tensorflow/cmain.py", line 291, in main
+    model.train(sess, train_data, test_data, saver, threshold_acc=config['cikm_threshold_acc'])
+  File "/home/lcur2471/rs_stamp/tensorflow/model/STAMP_cikm.py", line 317, in train
+    recall, mrr = self.test(sess, test_data)
+  File "/home/lcur2471/rs_stamp/tensorflow/model/STAMP_cikm.py", line 392, in test
+    c_loss += list(loss)
+UnboundLocalError: local variable 'ndcg_val' referenced before assignment
+srun: error: r28n2: task 0: Exited with exit code 1
