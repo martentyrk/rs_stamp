@@ -184,6 +184,7 @@ class Seq2SeqAttNN(NN):
 
         max_recall = 0.0
         max_mrr = 0.0
+        max_map = 0.0
         max_train_acc = 0.0
         for epoch in range(self.nepoch):   # epoch round.
             batch = 0
@@ -313,19 +314,21 @@ class Seq2SeqAttNN(NN):
                 return
             print('Epoch{}\tloss: {:.6f}'.format(epoch, avgc))
             if test_data != None:
-                recall, mrr = self.test(sess, test_data)
-                print(recall, mrr)
+                recall, mrr, map_metric = self.test(sess, test_data)
+                print(recall, mrr, map_metric)
+                if max_map < map_metric:
+                    max_map = map_metric
                 if max_recall < recall:
                     max_recall = recall
                     max_mrr = mrr
                     test_data.update_best()
                     if max_recall > threshold_acc:
                         self.save_model(sess, self.config, saver)
-                print ("                   max_recall: " + str(max_recall)+" max_mrr: "+str(max_mrr))
+                print ("                   max_recall: " + str(max_recall)+" max_mrr: "+str(max_mrr)+ " max_map: " + str(max_map))
                 test_data.flush()
         if self.is_print:
             TIPrint(test_data.samples, self.config,
-                    {'recall': max_recall, 'mrr': max_mrr}, True)
+                    {'recall': max_recall, 'mrr': max_mrr, 'map': max_map}, True)
 
     def test(self,sess,test_data):
         map_metric = tfr.keras.metrics.MeanAveragePrecisionMetric(topn=self.cut_off)
@@ -382,10 +385,8 @@ class Seq2SeqAttNN(NN):
                         t_r, t_m, ranks = cau_recall_mrr_org(preds, batch_out, cutoff=self.cut_off)
                         test_data.pack_ext_matrix('alpha', alpha, tmp_batch_ids)
                         test_data.pack_preds(ranks, tmp_batch_ids)
-                        test1 = np.array(batch_out).reshape(-1, 1)
-                        test2 = np.array(ranks).reshape(-1, 1)
-                        calc_map = map_metric(test1, test2)
-                        print(calc_map, 'calc map')
+                        calc_map = mapk(batch_out, list(ranks), self.cut_off)
+                        print(calc_map)
                         map_val += calc_map
                         c_loss += list(loss)
                         recall += t_r
@@ -425,7 +426,8 @@ class Seq2SeqAttNN(NN):
                         test_data.pack_ext_matrix('alpha', alpha, tmp_batch_ids)
                         test_data.pack_preds(ranks, tmp_batch_ids)
                         c_loss += list(loss)
-                        calc_map = mapk(batch_out, ranks, self.cut_off)
+                        print(ranks)
+                        calc_map = mapk(batch_out, list(ranks), self.cut_off)
                         print(calc_map)
                         map_val += calc_map
                         recall += t_r
@@ -452,7 +454,6 @@ class Seq2SeqAttNN(NN):
                         self.last_inputs: batch_last,
                         self.lab_input: batch_out,
                         self.sequence_length: batch_seq_l
-
                     }
 
                     # train
@@ -466,10 +467,10 @@ class Seq2SeqAttNN(NN):
                     c_loss += list(loss)
                     recall += t_r
                     mrr += t_m
-                    calc_map = average_precision_score(batch_out, preds) 
-                    
-                    map_val += calc_map.numpy()
+                    calc_map = mapk(batch_out, list(ranks), self.cut_off)
+                    map_val += calc_map
                     batch += 1
+                    
         r, m =cau_samples_recall_mrr(test_data.samples,self.cut_off)
         print (r,m)
         print (np.mean(c_loss))

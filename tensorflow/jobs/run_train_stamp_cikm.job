@@ -13,4 +13,4 @@ module purge
 
 source activate rs_env
 
-srun python3 cmain.py -m stamp_cikm -d cikm16 -n
+srun python3 cmain.py -m stamp_cikm -d cikm16 -n --epoch 1

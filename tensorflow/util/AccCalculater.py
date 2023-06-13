@@ -86,10 +86,10 @@ def new_cau_samples_recall_mrr(samples,cutoff=20):
 
 
 # PRECISION AT K
-def apk(gt, predicted, k):
+def apk(gt, predicted, k=20, all_preds):
     if not gt:
         return 0.0
-
+    
     if len(predicted)>k:
         predicted = predicted[:k]
 
@@ -97,12 +97,26 @@ def apk(gt, predicted, k):
     num_hits = 0.0
 
     for i, pred in enumerate(predicted):
-        if pred in gt and pred not in predicted[:i]:
+        #Do we need to check if its somewhere else?
+        if pred in gt and pred not in all_preds[:i]:
             num_hits += 1.0
             score += num_hits / (i+1.0)
 
     return score / min(len(gt), k)
 
-
+# Mean Average Precision at K
 def mapk(gt, preds, k):
-    return np.mean([apk(a,p,k) for a,p in zip(gt, preds)])
+    truth = []
+    pred = []
+    mean_average_prec = []
+    counter = 0
+    for t, p in zip(gt, preds):
+        if counter == k:
+            break
+        
+        truth.append(t)
+        pred.append(p)
+        mean_average_prec.append(apk(truth, pred, k, preds))
+        counter += 1
+    
+    return np.mean(mean_average_prec)

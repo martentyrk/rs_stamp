@@ -12,7 +12,7 @@ import datetime as dt
 PATH_TO_ORIGINAL_DATA = ''
 PATH_TO_PROCESSED_DATA = '/home/lcur2471/rs_stamp/data'
 
-data = pd.read_csv('/home/lcur2471/RecDatasets/conversion_tools/yoochoose-data/yoochoose-clicks.dat', sep=',', header=None, usecols=[0,1,2,3], dtype={0:np.int32, 1:str, 2:np.int64, 3:str})
+data = pd.read_csv('/home/lcur2471/rs_stamp/tensorflow/datas/yoochoose-data/yoochoose-clicks.dat', sep=',', header=None, usecols=[0,1,2,3], dtype={0:np.int32, 1:str, 2:np.int64, 3:str})
 data.columns = ['SessionId', 'TimeStr', 'ItemId', 'Cate']
 data['Time'] = data.TimeStr.apply(lambda x: dt.datetime.strptime(x, '%Y-%m-%dT%H:%M:%S.%fZ').timestamp()) #This is not UTC. It does not really matter.
 del(data['TimeStr'])
