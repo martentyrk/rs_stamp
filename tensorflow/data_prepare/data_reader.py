@@ -17,9 +17,9 @@ def load_rsc15_data(train_file, test_file, pro, pad_idx = 0):
     items2idx['<pad>'] = pad_idx
     idx_cnt = 0
     # load the data
-    train_data, idx_cnt = _load_data(train_file, items2idx, idx_cnt, pro,pad_idx)
+    train_data, idx_cnt = _load_rsc15_data(train_file, items2idx, idx_cnt, pro,pad_idx)
     print(len(items2idx.keys()))
-    test_data, idx_cnt = _load_data(test_file, items2idx, idx_cnt, pad_idx = pad_idx)
+    test_data, idx_cnt = _load_rsc15_data(test_file, items2idx, idx_cnt, pad_idx = pad_idx)
     print(len(items2idx.keys()))
 
     item_num = len(items2idx.keys())
