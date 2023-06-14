@@ -4,13 +4,20 @@ import tensorflow.compat.v1 as tf
 # tf.disable_v2_behavior()
 import pandas as pd
 import numpy as np
+
+
 from data_prepare.entity.samplepack import Samplepack
 from data_prepare.load_dict import load_random
-from data_prepare.cikm16data_read import load_data2
-from data_prepare.rsyc15data_read_p import load_data_p
+
+#from data_prepare.cikm16data_read import load_data2
+#from data_prepare.rsyc15data_read_p import load_data_p
+
+from data_prepare import data_reader
+
 from util.Config import read_conf
 from util.FileDumpLoad import dump_file, load_file
 from util.Randomer import Randomer
+from util.kfolds import split_k_folds
 
 import yaml
 
@@ -47,7 +54,7 @@ def load_tt_datas(config={}, reload=True):
         print (config['dataset'])
 
         if config['dataset'] == 'rsc15_4':
-            train_data, test_data, item2idx, n_items = load_data_p(
+            train_data, test_data, item2idx, n_items = data_reader.load_rsc15_data(
                 rsc15_train,
                 rsc15_test,
                 pro = 4
@@ -61,7 +68,7 @@ def load_tt_datas(config={}, reload=True):
             print("-----")
 
         if config['dataset'] == 'rsc15_64':
-            train_data, test_data, item2idx, n_items = load_data_p(
+            train_data, test_data, item2idx, n_items = data_reader.load_rsc15_data(
                 rsc15_train,
                 rsc15_test,
                 pro = 64
@@ -75,7 +82,7 @@ def load_tt_datas(config={}, reload=True):
             print("-----")
 
         if config['dataset'] == 'cikm16':
-            train_data, test_data, item2idx, n_items = load_data2(
+            train_data, test_data, item2idx, n_items = data_reader.load_cikm16_data(
                 cikm16_train,
                 cikm16_test,
                 class_num=config['class_num']
@@ -92,7 +99,7 @@ def load_tt_datas(config={}, reload=True):
         print(config['dataset'])
 
         if config['dataset'] == 'rsc15_4':
-            train_data, test_data, item2idx, n_items = load_data_p(
+            train_data, test_data, item2idx, n_items = data_reader.load_rsc15_data(
                 rsc15_train,
                 rsc15_test,
                 pro=4
@@ -107,7 +114,7 @@ def load_tt_datas(config={}, reload=True):
             print("-----")
 
         if config['dataset'] == 'rsc15_64':
-            train_data, test_data, item2idx, n_items = load_data_p(
+            train_data, test_data, item2idx, n_items = data_reader.load_rsc15_data(
                 rsc15_train,
                 rsc15_test,
                 pro=64
@@ -125,7 +132,7 @@ def load_tt_datas(config={}, reload=True):
             print("-----")
 
         if config['dataset'] == 'cikm16':
-            train_data, test_data, item2idx, n_items = load_data2(
+            train_data, test_data, item2idx, n_items = data_reader.load_cikm16_data(
                 cikm16_train,
                 cikm16_test,
                 class_num=config['class_num']
@@ -240,6 +247,16 @@ def option_parse():
         dest="epoch",
         default=10
     )
+    parser.add_option(
+            "-k",
+            "--cutoff",
+            action='store',
+            type='int',
+            dest="cutoff",
+            default=10
+        )
+    
+
     (option, args) = parser.parse_args()
     return option
 
@@ -272,10 +289,16 @@ def main(options, modelconf="config/model.conf"):
     config['model_save_path'] = model_path
     
     # metric @ k
-    config['cut_off'] = 10
+    config['cut_off'] = options.cutoff
     print(config)
     train_data, test_data = load_tt_datas(config, reload)
-    
+    print('------train data------')
+    print(train_data)
+    #<data_prepare.entity.samplepack.Samplepack object at 0x7f1156473350>
+    #testing_data = train_data + test_data
+    print('------train data------')
+
+    folds = split_k_folds
     #print(module)
     # model.STAMP_cikm
     
