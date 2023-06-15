@@ -5,5 +5,5 @@ root_path: "/Users/marten/UvA labs/"
 project_name: "rs_stamp"
 
 # yoochoose_clicks_path: '~/Documents/GitHub/rs_stamp/datas/rsc15/raw/yoochoose-misc/yoochoose-clicks.dat'
-yoochoose_clicks_path: "~/Documents/GitHub/rs_stamp/datas/rsc15/raw/yoochoose-misc/yoochoose-clicks.dat"
+yoochoose_clicks_path: "/Users/marten/UvA labs/rs_stamp/datas/rsc15/raw/yoochoose-clicks.dat"
 # yoochoose_clicks_path: '/home/lcur2471/RecDatasets/conversion_tools/yoochoose-data/yoochoose-clicks.dat'
