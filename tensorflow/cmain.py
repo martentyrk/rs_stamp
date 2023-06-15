@@ -14,6 +14,10 @@ from util.Config import read_conf
 from util.Randomer import Randomer
 from util.kfolds import split_k_folds
 
+
+from util.save_results import save_results
+
+
 def load_conf(model, modelconf):
     '''
     model: 需要加载的模型
@@ -75,11 +79,11 @@ def option_parse():
     )
 
     parser.add_option(
-        "-a",
-        "--nottrain",
+        "-t",
+        "--test_model",
         action='store_true',
-        dest="not_train",
-        default=False
+        dest="test_model",
+        default=True
     )
     parser.add_option(
         "-n",
@@ -94,8 +98,7 @@ def option_parse():
         action='store',
         type='string',
         dest="model_path",
-        #paths['root_path']+paths['project_name']+'/tensorflow
-        default='/output/saved_models/'
+        default='output/saved_models/'
     )
     parser.add_option(
         "-i",
@@ -149,7 +152,7 @@ def main(options, modelconf="config/model.conf"):
     dataset = options.dataset
     reload = options.reload
     class_num = options.classnum
-    is_train = not options.not_train
+    test_model = options.test_model
     is_save = not options.not_save_model
     model_path = options.model_path#paths['root_path']+paths['project_name']+options.model_path+model+dataset+'.ckpt'
 
@@ -162,13 +165,16 @@ def main(options, modelconf="config/model.conf"):
     config['class_num'] = class_num
     config['nepoch'] = epoch
     config['model_save_path'] = model_path
-    
+    config['test_model'] = test_model
+
+
     # metric @ k
     config['cut_off'] = options.cutoff
-    print(config)
+    config['k_folds'] = options.kfolds
+
     train_data, test_data = load_data(config, reload, kfolds=options.kfolds)
     print('------train data------')
-    print(train_data)
+    print(config['recsys_threshold_acc'])
     #<data_prepare.entity.samplepack.Samplepack object at 0x7f1156473350>
     #testing_data = train_data + test_data
     print('------train data------')
@@ -187,54 +193,42 @@ def main(options, modelconf="config/model.conf"):
         # build model
         model = getattr(module, obj)(config)
         model.build_model()
-        if is_save or not is_train:
+        if is_save or not test_model:
             saver = tf.train.Saver(max_to_keep=30)
         else:
             saver = None
         # run
         with tf.Session() as sess:
             sess.run(tf.global_variables_initializer())
-            if is_train:
-                print(dataset)
-                
-                config_key = 'cikm_threshold_acc' if dataset=='cikm16' else 'recsys_threshold_acc'
-                ######## TODO: TRAIN AND TEST ARE FOLDS IF KFOLDS > 0 
-                if options.kfolds > 0:
-                    for fold in range(options.kfolds):
-                        fold_train_data, fold_val_data = train_data[fold]
-                        model.train(sess, fold_train_data, fold_val_data, saver, threshold_acc=config[config_key])
-                        
-                else:
-                    model.train(sess, train_data, test_data, saver, threshold_acc=config[config_key])
-
+            
+            config_key = 'cikm_threshold_acc' if dataset=='cikm16' else 'recsys_threshold_acc'
+            if options.kfolds > 1:
+                for fold in range(options.kfolds):
+                    fold_train_data, fold_val_data = train_data[fold]
+                    model.train(sess, fold_train_data, fold_val_data, saver, threshold_acc=config[config_key])
             else:
-                # input data is test by default - it determines what dataset is tested on
+                model.train(sess, train_data, test_data, saver, threshold_acc=config[config_key])
+            
+            # save the final model
+            config = model.save_model(sess, config, saver)
+
+            if test_model:
+
+                # run test after training is finished
+                print('--------------- TRAINING FINISHED, NOW TESTING ---------------')
                 if input_data == "test":
                     sent_data = test_data
                 elif input_data == "train":
-                    if options.kfolds > 0:
+                    if options.kfolds > 1:
                         sent_data = [fold for fold in train_data]
                     else:
                         sent_data = train_data
-                else:
-                    sent_data = test_data
-                saver.restore(sess, model_path)
-                model.test(sess, sent_data)
+                sent_data = test_data
+                saver.restore(sess, config['saved_model'])
+                recall, mrr = model.test(sess, sent_data)
+                save_results(config, recall, mrr)
+                print('--------------- TESTING FINISHED ---------------')
 
-    # run test after training is finished
-    print('--------------- TRAINING FINISHED, NOW TESTING ---------------')
-    if input_data == "test":
-        sent_data = test_data
-    elif input_data == "train":
-        if options.kfolds > 0:
-            sent_data = [fold for fold in train_data]
-        else:
-            sent_data = train_data
-    else:
-        sent_data = test_data
-        saver.restore(sess, model_path)
-        model.test(sess, sent_data)
-    print('--------------- TESTING FINISHED ---------------')
 
 
 if __name__ == '__main__':

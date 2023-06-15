@@ -12,11 +12,11 @@ def TIPrint(samples, config, acc = {},print_att = False,Time = None):
         base_path += bp + "/"
     base_path += 'output/'
     if Time is None:
-        suf = time.strftime("%Y%m%d%H%M", time.localtime())
+        suf = time.strftime("%Y%m%d%H%M", time.localtime())[4:]
     else:
         suf = Time
-
-    path = base_path + "text/" + config['model'] + "-" + config['dataset'] + "-" + suf + '.out'
+    #path = base_path + "text/" + config['model'] + "-" + config['dataset'] + "-" + suf + '.out'
+    path = f"{base_path}text/{config['model']}-{config['dataset']}-{config['k_folds']}folds-atk{config['cut_off']}-{suf}.out"
     print_txt(path, samples, config, acc, print_att)
     return suf
 

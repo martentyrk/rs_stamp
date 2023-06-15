@@ -12,7 +12,7 @@ from util.Pooler import pooler
 from basic_layer.FwNn3AttLayer import FwNnAttLayer
 from util.FileDumpLoad import dump_file
 
-
+from util.save_results import save_results
 class Seq2SeqAttNN(NN):
     """
     The memory network with context attention.
@@ -323,6 +323,7 @@ class Seq2SeqAttNN(NN):
                 print ("                   max_recall: " + str(max_recall)+" max_mrr: "+str(max_mrr))
                 test_data.flush()
         if self.is_print:
+            save_results(self.config, max_recall, max_mrr, split='val')
             TIPrint(test_data.samples, self.config,
                     {'recall': max_recall, 'mrr': max_mrr}, True)
 
