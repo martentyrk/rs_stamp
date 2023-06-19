@@ -11,8 +11,8 @@ from util.AccCalculater import cau_samples_recall_mrr
 from util.Pooler import pooler
 from basic_layer.FwNn3AttLayer import FwNnAttLayer
 from util.FileDumpLoad import dump_file
-
 from util.save_results import save_results
+
 class Seq2SeqAttNN(NN):
     """
     The memory network with context attention.
