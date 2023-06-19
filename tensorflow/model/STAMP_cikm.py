@@ -185,6 +185,7 @@ class Seq2SeqAttNN(NN):
         max_mrr = 0.0
         max_train_acc = 0.0
         for epoch in range(self.nepoch):   # epoch round.
+            print('Epoch:', epoch)
             batch = 0
             c = []
             cost = 0.0  # the cost of each epoch.
@@ -322,9 +323,9 @@ class Seq2SeqAttNN(NN):
                         self.save_model(sess, self.config, saver)
                 print ("                   max_recall: " + str(max_recall)+" max_mrr: "+str(max_mrr))
                 test_data.flush()
-        if self.is_print:
-            TIPrint(test_data.samples, self.config,
-                    {'recall': max_recall, 'mrr': max_mrr}, True)
+        # if self.is_print:
+        #     TIPrint(test_data.samples, self.config,
+        #             acc={'recall': max_recall, 'mrr': max_mrr}, print_att=True)
 
     def test(self,sess,test_data):
 
@@ -407,7 +408,6 @@ class Seq2SeqAttNN(NN):
                             self.last_inputs: batch_last,
                             self.lab_input: batch_out,
                             self.sequence_length: batch_seq_l
-
                         }
 
                         # train

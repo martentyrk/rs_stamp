@@ -1,0 +1,261 @@
+/var/spool/slurm/slurmd/job11930615/slurm_script: line 14: activate: No such file or directory
+2023-06-16 17:27:19.924603: I tensorflow/tsl/cuda/cudart_stub.cc:28] Could not find cuda drivers on your machine, GPU will not be used.
+2023-06-16 17:27:20.037421: I tensorflow/tsl/cuda/cudart_stub.cc:28] Could not find cuda drivers on your machine, GPU will not be used.
+2023-06-16 17:27:20.037981: I tensorflow/core/platform/cpu_feature_guard.cc:182] This TensorFlow binary is optimized to use available CPU instructions in performance-critical operations.
+To enable the following instructions: AVX2 AVX512F FMA, in other operations, rebuild TensorFlow with the appropriate compiler flags.
+2023-06-16 17:27:21.684277: W tensorflow/compiler/tf2tensorrt/utils/py_utils.cc:38] TF-TRT Warning: Could not find TensorRT
+2023-06-16 17:27:24.551011: W tensorflow/core/common_runtime/gpu/gpu_device.cc:1956] Cannot dlopen some GPU libraries. Please make sure the missing libraries mentioned above are installed properly if you would like to use GPU. Follow the guide at https://www.tensorflow.org/install/gpu for how to download and setup the required libraries for your platform.
+Skipping registering GPU devices...
+WARNING:tensorflow:From /home/lcur2471/.conda/envs/rs_env/lib/python3.9/site-packages/tensorflow/python/compat/v2_compat.py:107: disable_resource_variables (from tensorflow.python.ops.variable_scope) is deprecated and will be removed in a future version.
+Instructions for updating:
+non-resource variables are not supported in the long term
+WARNING:tensorflow:Variable *= will be deprecated. Use `var.assign(var * other)` if you want assignment to the variable value or `x = x * y` if you want a new python Tensor object.
+WARNING:tensorflow:From /home/lcur2471/.conda/envs/rs_env/lib/python3.9/site-packages/tensorflow/python/util/dispatch.py:1176: div (from tensorflow.python.ops.math_ops) is deprecated and will be removed in a future version.
+Instructions for updating:
+Deprecated in favor of operator or tf.math.divide.
+2023-06-16 17:27:26.080921: I tensorflow/compiler/mlir/mlir_graph_optimization_pass.cc:353] MLIR V1 optimization pass is not enabled
+[]
+{'dataset': 'cikm16', 'nepoch': 30, 'batch_size': 512, 'init_lr': 0.003, 'stddev': 0.05, 'emb_stddev': 0.002, 'edim': 100, 'max_grad_norm': 110, 'pad_idx': 0, 'emb_up': True, 'update_lr': False, 'active': 'sigmoid', 'model_save_path': '/output/saved_models/', 'recsys_threshold_acc': 0.68, 'cikm_threshold_acc': 0.62, 'is_print': True, 'cell': 'gru', 'hidden_size': 100, 'cut_off': 10, 'model': 'stamp_cikm', 'class_num': 3}
+-------------------------------
+reload the datasets.
+cikm16
+read finish
+sort finish
+list finish
+I am reading
+id: 44115
+session_id: 600680
+items: [10169, 6870, 7100]
+click_items: [31062, 10274, 36212]
+out: [6870, 7100]
+in: [10169, 6870]
+label: []
+
+17307
+read finish
+sort finish
+list finish
+I am reading
+id: 11043
+session_id: 600566
+items: [2934, 10833]
+click_items: [6440, 199109]
+out: [10833]
+in: [2934]
+label: []
+
+17357
+dump file done.
+-----
+Starting training
+cikm16
+Epoch: 0
+Epoch0	loss: 8.402411
+Measuring Recall@10 and MRR@10
+0.2581453634085213 0.13098542901566104
+6.936056
+0.2581453634085213 0.13098542901566085
+                   max_recall: 0.2581453634085213 max_mrr: 0.13098542901566085
+Epoch: 1
+Epoch1	loss: 5.627863
+Measuring Recall@10 and MRR@10
+0.404265873015873 0.1968715708749383
+5.8963428
+0.404265873015873 0.19687157087493865
+                   max_recall: 0.404265873015873 max_mrr: 0.19687157087493865
+Epoch: 2
+Epoch2	loss: 4.434195
+Measuring Recall@10 and MRR@10
+0.47013366750208857 0.245495787252524
+5.503717
+0.47013366750208857 0.24549578725252286
+                   max_recall: 0.47013366750208857 max_mrr: 0.24549578725252286
+Epoch: 3
+Epoch3	loss: 3.886493
+Measuring Recall@10 and MRR@10
+0.49759816207184626 0.26034324609473636
+5.4421716
+0.49759816207184626 0.2603432460947342
+                   max_recall: 0.49759816207184626 max_mrr: 0.2603432460947342
+Epoch: 4
+Epoch4	loss: 3.568043
+Measuring Recall@10 and MRR@10
+0.5191885964912281 0.27491810503441466
+5.342225
+0.5191885964912281 0.27491810503441144
+                   max_recall: 0.5191885964912281 max_mrr: 0.27491810503441144
+Epoch: 5
+Epoch5	loss: 3.237581
+Measuring Recall@10 and MRR@10
+0.4930033416875522 0.24396910140762068
+5.5687337
+0.4930033416875522 0.24396910140761957
+                   max_recall: 0.5191885964912281 max_mrr: 0.27491810503441144
+Epoch: 6
+Epoch6	loss: 3.088986
+Measuring Recall@10 and MRR@10
+0.4972848788638262 0.25682921133853265
+5.638424
+0.4972848788638262 0.25682921133853154
+                   max_recall: 0.5191885964912281 max_mrr: 0.27491810503441144
+Epoch: 7
+Epoch7	loss: 2.935213
+Measuring Recall@10 and MRR@10
+0.51078216374269 0.26013851386071196
+5.575957
+0.51078216374269 0.26013851386070996
+                   max_recall: 0.5191885964912281 max_mrr: 0.27491810503441144
+Epoch: 8
+Epoch8	loss: 2.807483
+Measuring Recall@10 and MRR@10
+0.5078320802005013 0.2546899863746686
+5.712198
+0.5078320802005013 0.25468998637466683
+                   max_recall: 0.5191885964912281 max_mrr: 0.27491810503441144
+Epoch: 9
+Epoch9	loss: 2.635172
+Measuring Recall@10 and MRR@10
+0.4968932748538012 0.2479503777631923
+5.8985868
+0.4968932748538012 0.24795037776319104
+                   max_recall: 0.5191885964912281 max_mrr: 0.27491810503441144
+Epoch: 10
+Epoch10	loss: 2.488126
+Measuring Recall@10 and MRR@10
+0.49423036758563077 0.24563265181803737
+6.034889
+0.49423036758563077 0.24563265181803712
+                   max_recall: 0.5191885964912281 max_mrr: 0.27491810503441144
+Epoch: 11
+Epoch11	loss: 2.404316
+Measuring Recall@10 and MRR@10
+0.48216896407685883 0.23658470332577508
+6.1318154
+0.48216896407685883 0.2365847033257747
+                   max_recall: 0.5191885964912281 max_mrr: 0.27491810503441144
+Epoch: 12
+Epoch12	loss: 2.309903
+Measuring Recall@10 and MRR@10
+0.47253550543024225 0.2273814185762021
+6.304382
+0.47253550543024225 0.22738141857620242
+                   max_recall: 0.5191885964912281 max_mrr: 0.27491810503441144
+Epoch: 13
+Epoch13	loss: 2.174795
+Measuring Recall@10 and MRR@10
+0.47848788638262324 0.24050895882232137
+6.373795
+0.47848788638262324 0.24050895882232032
+                   max_recall: 0.5191885964912281 max_mrr: 0.27491810503441144
+Epoch: 14
+Epoch14	loss: 2.143552
+Measuring Recall@10 and MRR@10
+0.48329156223893066 0.24023908357202717
+6.5097027
+0.48329156223893066 0.2402390835720253
+                   max_recall: 0.5191885964912281 max_mrr: 0.27491810503441144
+Epoch: 15
+Epoch15	loss: 2.076232
+Measuring Recall@10 and MRR@10
+0.4777829991645781 0.2364940749691694
+6.5732155
+0.4777829991645781 0.23649407496916894
+                   max_recall: 0.5191885964912281 max_mrr: 0.27491810503441144
+Epoch: 16
+Epoch16	loss: 1.993572
+Measuring Recall@10 and MRR@10
+0.4475250626566416 0.2129529345851385
+6.5834093
+0.4475250626566416 0.21295293458514009
+                   max_recall: 0.5191885964912281 max_mrr: 0.27491810503441144
+Epoch: 17
+Epoch17	loss: 1.935050
+Measuring Recall@10 and MRR@10
+0.460500208855472 0.2223240289049342
+6.879378
+0.460500208855472 0.22232402890493433
+                   max_recall: 0.5191885964912281 max_mrr: 0.27491810503441144
+Epoch: 18
+Epoch18	loss: 1.813865
+Measuring Recall@10 and MRR@10
+0.4633458646616541 0.2283531352355749
+6.9712124
+0.4633458646616541 0.22835313523557568
+                   max_recall: 0.5191885964912281 max_mrr: 0.27491810503441144
+Epoch: 19
+Epoch19	loss: 1.824174
+Measuring Recall@10 and MRR@10
+0.45258980785296576 0.21786245748299135
+7.043711
+0.45258980785296576 0.21786245748299318
+                   max_recall: 0.5191885964912281 max_mrr: 0.27491810503441144
+Epoch: 20
+Epoch20	loss: 1.801869
+Measuring Recall@10 and MRR@10
+0.4489087301587302 0.2161053986653128
+7.2177587
+0.4489087301587302 0.21610539866531406
+                   max_recall: 0.5191885964912281 max_mrr: 0.27491810503441144
+Epoch: 21
+Epoch21	loss: 1.743993
+Measuring Recall@10 and MRR@10
+0.4496658312447786 0.2175746388955177
+7.251506
+0.4496658312447786 0.21757463889551923
+                   max_recall: 0.5191885964912281 max_mrr: 0.27491810503441144
+Epoch: 22
+Epoch22	loss: 1.739553
+Measuring Recall@10 and MRR@10
+0.44864766081871343 0.2198209230085787
+7.355402
+0.44864766081871343 0.21982092300857964
+                   max_recall: 0.5191885964912281 max_mrr: 0.27491810503441144
+Epoch: 23
+Epoch23	loss: 1.659908
+Measuring Recall@10 and MRR@10
+0.44648078529657476 0.2216777268899755
+7.471791
+0.44648078529657476 0.22167772688997625
+                   max_recall: 0.5191885964912281 max_mrr: 0.27491810503441144
+Epoch: 24
+Epoch24	loss: 1.602211
+Measuring Recall@10 and MRR@10
+0.43854427736006685 0.21138660142419413
+7.622145
+0.43854427736006685 0.21138660142419544
+                   max_recall: 0.5191885964912281 max_mrr: 0.27491810503441144
+Epoch: 25
+Epoch25	loss: 1.618594
+Measuring Recall@10 and MRR@10
+0.44606307435254805 0.22018367471257347
+7.602066
+0.44606307435254805 0.22018367471257508
+                   max_recall: 0.5191885964912281 max_mrr: 0.27491810503441144
+Epoch: 26
+Epoch26	loss: 1.562335
+Measuring Recall@10 and MRR@10
+0.4392230576441103 0.2181723633654234
+7.727544
+0.4392230576441103 0.21817236336542414
+                   max_recall: 0.5191885964912281 max_mrr: 0.27491810503441144
+Epoch: 27
+Epoch27	loss: 1.560430
+Measuring Recall@10 and MRR@10
+0.43141708437761067 0.208926810246515
+7.6971874
+0.43141708437761067 0.20892681024651574
+                   max_recall: 0.5191885964912281 max_mrr: 0.27491810503441144
+Epoch: 28
+Epoch28	loss: 1.541553
+Measuring Recall@10 and MRR@10
+0.43110380116959063 0.20969169161329057
+7.902104
+0.43110380116959063 0.20969169161329249
+                   max_recall: 0.5191885964912281 max_mrr: 0.27491810503441144
+Epoch: 29
+Epoch29	loss: 1.512728
+Measuring Recall@10 and MRR@10
+0.4353331244778613 0.2149420757581771
+7.930681
+0.4353331244778613 0.2149420757581785
+                   max_recall: 0.5191885964912281 max_mrr: 0.27491810503441144
