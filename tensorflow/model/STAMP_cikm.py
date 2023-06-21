@@ -331,7 +331,7 @@ class Seq2SeqAttNN(NN):
     def test(self,sess,test_data):
 
         # calculate the acc
-        print('Measuring Recall@{} and MRR@{}'.format(self.cut_off, self.cut_off))
+        print('Measuring Recall@{}, MRR@{}, and Repeat@{}'.format(self.cut_off, self.cut_off, self.cut_off))
         mrr, recall, repeat = [], [], []
         c_loss =[]
         batch = 0
@@ -464,5 +464,6 @@ class Seq2SeqAttNN(NN):
                     repeat += t_repeat
         r, m =cau_samples_recall_mrr(test_data.samples,self.cut_off)
         print (r,m)
+        print(f"Mean Repeat ratio: {round(sum(repeat) / len(repeat), 3)}")
         print (np.mean(c_loss))
-        return  np.mean(recall), np.mean(mrr)
+        return  np.mean(recall), np.mean(mrr)#, np.mean(repeat)
