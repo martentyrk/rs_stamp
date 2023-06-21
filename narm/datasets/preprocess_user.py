@@ -26,11 +26,6 @@ parser = argparse.ArgumentParser()
 parser.add_argument('--dataset', default='diginetica', help='dataset name')
 args = parser.parse_args()
 
-# add a header for yoochoose dataset
-# with open('yoochoose-clicks.dat', 'r') as f, open('yoochoose-clicks-withHeader.dat', 'w') as fn:
-#     fn.write('sessionId,timestamp,itemId,category'+'\n')
-#     for line in f:
-#         fn.write(line)
 
 if args.dataset == 'diginetica':
     dataset = '/home/lcur2471/rs_stamp/datas/cikm16/raw/train-item-views.csv'
@@ -46,10 +41,7 @@ if args.dataset == 'diginetica':
 
 print("-- Starting @ %ss" % datetime.datetime.now())
 with open(dataset, "r") as f:
-    if args.dataset == 'yoochoose':
-        reader = csv.DictReader(f, delimiter=',')
-    else:
-        reader = csv.DictReader(f, delimiter=';')
+    reader = csv.DictReader(f, delimiter=';')
     sess_clicks = {}
     sess_date = {}
     sess_user = {}
@@ -219,8 +211,8 @@ print('avg length: ', all/(len(tra_seqs) + len(tes_seqs) * 1.0))
 
 if not os.path.exists('diginetica'):
     os.makedirs('diginetica')
-pickle.dump(tra, open('diginetica/train.txt', 'wb'))
-pickle.dump(tes, open('diginetica/test.txt', 'wb'))
-pickle.dump(tra_seqs, open('diginetica/all_train_seq.txt', 'wb'))
+pickle.dump(tra, open('diginetica/train_user.txt', 'wb'))
+pickle.dump(tes, open('diginetica/test_user.txt', 'wb'))
+pickle.dump(tra_seqs, open('diginetica/all_train_seq_user.txt', 'wb'))
 
 print('Done.')

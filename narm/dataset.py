@@ -34,8 +34,8 @@ def load_data(root, valid_portion=0.1, maxlen=19, sort_by_len=False):
     '''
 
     # Load the dataset
-    path_train_data = '/home/lcur2471/narm/datasets/diginetica/train.txt'
-    path_test_data = '/home/lcur2471/narm/datasets/diginetica/test.txt'
+    path_train_data = '/home/lcur2471/rs_stamp/narm/datasets/diginetica/train_session.txt'
+    path_test_data = '/home/lcur2471/rs_stamp/narm/datasets/diginetica/test_session.txt'
     with open(path_train_data, 'rb') as f1:
         train_set = pickle.load(f1)
 
