@@ -12,6 +12,7 @@ from util.Pooler import pooler
 from basic_layer.FwNn3AttLayer import FwNnAttLayer
 from util.FileDumpLoad import dump_file
 from util.save_results import save_results
+from util.RepeatRatio import repeat_ratio
 
 class Seq2SeqAttNN(NN):
     """
@@ -331,7 +332,7 @@ class Seq2SeqAttNN(NN):
 
         # calculate the acc
         print('Measuring Recall@{} and MRR@{}'.format(self.cut_off, self.cut_off))
-        mrr, recall = [], []
+        mrr, recall, repeat = [], [], []
         c_loss =[]
         batch = 0
         bt = batcher(
@@ -453,12 +454,14 @@ class Seq2SeqAttNN(NN):
                         feed_dict=feed_dict
                     )
                     t_r, t_m, ranks = cau_recall_mrr_org(preds, batch_out, cutoff=self.cut_off)
+                    t_repeat = repeat_ratio(batch_in, preds, cutoff=self.cut_off)
                     test_data.pack_ext_matrix('alpha', alpha, tmp_batch_ids)
                     test_data.pack_preds(ranks, tmp_batch_ids)
                     c_loss += list(loss)
                     recall += t_r
                     mrr += t_m
                     batch += 1
+                    repeat += t_repeat
         r, m =cau_samples_recall_mrr(test_data.samples,self.cut_off)
         print (r,m)
         print (np.mean(c_loss))
