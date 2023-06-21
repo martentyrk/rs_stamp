@@ -28,12 +28,6 @@ args = parser.parse_args()
 
 if args.dataset == 'diginetica':
     dataset = '/home/lcur2471/rs_stamp/datas/cikm16/raw/train-item-views.csv'
-    train_ids = '/home/lcur2471/rs_stamp/datas/cikm16/processed/train_ids.txt'
-    test_ids = '/home/lcur2471/rs_stamp/datas/cikm16/processed/test_ids.txt'
-    
-    with open(train_ids, 'rb') as f, open(test_ids, 'rb') as test_f:
-        train_user_ids = pickle.load(f)
-        test_user_ids = pickle.load(test_f)
 
 print("-- Starting @ %ss" % datetime.datetime.now())
 with open(dataset, "r") as f:
@@ -243,7 +237,7 @@ elif args.dataset == 'yoochoose':
     pickle.dump(seq4, open('yoochoose1_4/all_train_seq.txt', 'wb'))
 
     pickle.dump(tra64, open('yoochoose1_64/train.txt', 'wb'))
-    pickle.dump(seq64, open('yoochoose1_64/all_train_seq.txt', 'wb'))
+    pickle.dump(seq64, open('yoochoose1_64/all_train_seq_user.txt', 'wb'))
 else:
     pass
 

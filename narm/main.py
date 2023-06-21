@@ -40,6 +40,7 @@ parser.add_argument('--lr_dc_step', type=int, default=80, help='the number of st
 parser.add_argument('--test', action='store_true', help='test')
 parser.add_argument('--topk', type=int, default=10, help='number of top score items selected for calculating recall and mrr metrics')
 parser.add_argument('--valid_portion', type=float, default=0.1, help='split the portion of training set as validation set')
+parser.add_argument('--user_based', action='store_true', help='test')
 args = parser.parse_args()
 print(args)
 
@@ -57,7 +58,11 @@ def main():
     valid_loader = DataLoader(valid_data, batch_size = args.batch_size, shuffle = False, collate_fn = collate_fn)
     test_loader = DataLoader(test_data, batch_size = args.batch_size, shuffle = False, collate_fn = collate_fn)
 
-    n_items = 49927
+    n_items = 0
+    if args.user_based:
+        n_items = 49927 # for user based split
+    else:
+        n_items = 43098 # for session based split
 
     model = NARM(n_items, args.hidden_size, args.embed_dim, args.batch_size).to(device)
 
@@ -87,7 +92,7 @@ def main():
             'optimizer': optimizer.state_dict()
         }
 
-        torch.save(ckpt_dict, 'latest_checkpoint.pth.tar')
+        torch.save(ckpt_dict, 'latest_checkpoint_session_epoch_30.pth.tar')
 
 
 def trainForEpoch(train_loader, model, optimizer, epoch, num_epochs, criterion, log_aggr=1):
