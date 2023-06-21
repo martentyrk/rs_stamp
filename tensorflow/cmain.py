@@ -4,7 +4,9 @@ import tensorflow.compat.v1 as tf
 import pandas as pd
 import numpy as np
 
-
+import copy 
+from tqdm import tqdm
+import numpy as np
 from data_prepare.entity.samplepack import Samplepack
 from data_prepare import data_loader
 
@@ -13,10 +15,11 @@ from data_prepare.data_loader import load_data
 from util.Config import read_conf
 from util.Randomer import Randomer
 from util.kfolds import split_k_folds
-
+from keras import backend as K
 
 from util.save_results import save_results
 
+import importlib
 
 def load_conf(model, modelconf):
     '''
@@ -159,7 +162,7 @@ def main(options, modelconf="config/model.conf"):
     input_data = options.input_data
     epoch = options.epoch
 
-    module, obj, config = load_conf(model, modelconf)
+    module_name, obj, config = load_conf(model, modelconf)
     config['model'] = model
     config['dataset'] = dataset
     config['class_num'] = class_num
@@ -171,65 +174,68 @@ def main(options, modelconf="config/model.conf"):
     # metric @ k
     config['cut_off'] = options.cutoff
     config['k_folds'] = options.kfolds
-
+    print(config['model'])
+    best_recall = 0
+    best_model_graph = None
     train_data, test_data = load_data(config, reload, kfolds=options.kfolds)
-    print('------train data------')
-    print(config['recsys_threshold_acc'])
-    #<data_prepare.entity.samplepack.Samplepack object at 0x7f1156473350>
-    #testing_data = train_data + test_data
-    print('------train data------')
-
-    #print(module)
-    # model.STAMP_cikm
-    
-    module = __import__(module, fromlist=True)
-
-    #print(module)
-    # <module 'model.STAMP_cikm' from '/home/andre/Documents/GitHub/rs_stamp/tensorflow/model/STAMP_cikm.py'> 
 
     # setup randomer
     Randomer.set_stddev(config['stddev'])
-    with tf.Graph().as_default():
-        # build model
-        model = getattr(module, obj)(config)
-        model.build_model()
-        if is_save or not test_model:
-            saver = tf.train.Saver(max_to_keep=30)
-        else:
-            saver = None
-        # run
-        with tf.Session() as sess:
-            sess.run(tf.global_variables_initializer())
-            
-            config_key = 'cikm_threshold_acc' if dataset=='cikm16' else 'recsys_threshold_acc'
-            if options.kfolds > 1:
-                for fold in range(options.kfolds):
-                    fold_train_data, fold_val_data = train_data[fold]
-                    model.train(sess, fold_train_data, fold_val_data, saver, threshold_acc=config[config_key])
+    config_key = 'cikm_threshold_acc' if dataset=='cikm16' else 'recsys_threshold_acc'
+    module = importlib.import_module(module_name)
+    if options.kfolds > 1:
+        best_model_path = f"{config['model_save_path']}{config['model']}-{config['dataset']}-{config['k_folds']}folds-atk{config['cut_off']}-best_model.ckpt"
+
+        for fold in tqdm(range(options.kfolds)):
+            cur_fold_graph = tf.Graph()
+            with cur_fold_graph.as_default():
+                model = getattr(module, obj)(config)
+                model.build_model()
+
+                # need to do this after each fold
+                if is_save or not test_model:
+                    saver = tf.train.Saver(max_to_keep=30)
+                else:
+                    saver = None
+                init = tf.global_variables_initializer()
+                fold_train_data, fold_val_data = train_data[fold]
+                with tf.Session() as sess:
+                    sess.run(init)
+                    val_results = model.train(sess, fold_train_data, fold_val_data, saver, threshold_acc=config[config_key])
+
+                    # if the P@K is the best, save the model
+                    if val_results['recall'] > best_recall:
+                        best_recall = val_results['recall']
+                        saver.save(sess, best_model_path)
+                        best_model_graph = cur_fold_graph
+                        best_model = model
+
+
+    else:
+        with tf.Graph().as_default():
+            model = getattr(module, obj)(config)
+            model.build_model()
+            if is_save or not test_model:
+                saver = tf.train.Saver(max_to_keep=30)
             else:
+                saver = None
+            with tf.Session() as sess:
+                sess.run(tf.global_variables_initializer())
                 model.train(sess, train_data, test_data, saver, threshold_acc=config[config_key])
-            
-            # save the final model
-            config = model.save_model(sess, config, saver)
-
-            if test_model:
-
-                # run test after training is finished
-                print('--------------- TRAINING FINISHED, NOW TESTING ---------------')
-                if input_data == "test":
-                    sent_data = test_data
-                elif input_data == "train":
-                    if options.kfolds > 1:
-                        sent_data = [fold for fold in train_data]
-                    else:
-                        sent_data = train_data
+    if test_model:
+        with best_model_graph.as_default():
+            if input_data == "test":
                 sent_data = test_data
-                saver.restore(sess, config['saved_model'])
-                recall, mrr = model.test(sess, sent_data)
-                save_results(config, recall, mrr)
-                print('--------------- TESTING FINISHED ---------------')
-
-
+            elif input_data == "train":
+                if options.kfolds > 1:
+                    sent_data = [fold for fold in train_data]
+                else:
+                    sent_data = train_data
+            sent_data = test_data
+            with tf.Session() as sess:
+                saver.restore(sess, best_model_path)
+                recall, mrr = best_model.test(sess, sent_data)
+            save_results(config, recall, mrr)
 
 if __name__ == '__main__':
     options = option_parse()
