@@ -12,7 +12,8 @@ from util.Pooler import pooler
 from basic_layer.FwNn3AttLayer import FwNnAttLayer
 from util.FileDumpLoad import dump_file
 from util.save_results import save_results
-from util.RepeatRatio import repeat_ratio
+from util.RepeatRatio import repeat_ratio_sample
+from tqdm import tqdm
 
 class Seq2SeqAttNN(NN):
     """
@@ -194,7 +195,9 @@ class Seq2SeqAttNN(NN):
                 class_num= self.n_items,
                 random=True
             )
-            while bt.has_next():    # batch round.
+            for _ in tqdm(range(len(bt.rand_idx))):
+                if not bt.has_next():
+                    break
                 # get this batch data
                 batch_data = bt.next_batch()
                 # build the feed_dict
@@ -313,7 +316,7 @@ class Seq2SeqAttNN(NN):
                 return
             print('Epoch{}\tloss: {:.6f}'.format(epoch, avgc))
             if test_data != None:
-                recall, mrr = self.test(sess, test_data)
+                recall, mrr, repeat = self.test(sess, test_data)
                 print(recall, mrr)
                 if max_recall < recall:
                     max_recall = recall
@@ -321,18 +324,19 @@ class Seq2SeqAttNN(NN):
                     test_data.update_best()
                     if max_recall > threshold_acc:
                         self.save_model(sess, self.config, saver)
-                print ("                   max_recall: " + str(max_recall)+" max_mrr: "+str(max_mrr))
+                print ("                   max_recall: " + str(max_recall)+" max_mrr: "+str(max_mrr) + " repeat: " + str(repeat))
                 test_data.flush()
         if self.is_print:
             save_results(self.config, max_recall, max_mrr, split='val')
             TIPrint(test_data.samples, self.config,
-                    {'recall': max_recall, 'mrr': max_mrr}, True)
+                    {'recall': max_recall, 'mrr': max_mrr, 'repeat': repeat}, True)
 
     def test(self,sess,test_data):
 
         # calculate the acc
         print('Measuring Recall@{}, MRR@{}, and Repeat@{}'.format(self.cut_off, self.cut_off, self.cut_off))
-        mrr, recall, repeat = [], [], []
+        mrr, recall = [], []
+        repeat = []
         c_loss =[]
         batch = 0
         bt = batcher(
@@ -340,7 +344,10 @@ class Seq2SeqAttNN(NN):
             class_num = self.n_items,
             random = False
         )
-        while bt.has_next():    # batch round.
+        for _ in tqdm(range(len(bt.rand_idx))):
+            if not bt.has_next():
+                break
+            #while bt.has_next():    # batch round.
             # get this batch data
             batch_data = bt.next_batch()
             # build the feed_dict
@@ -454,7 +461,7 @@ class Seq2SeqAttNN(NN):
                         feed_dict=feed_dict
                     )
                     t_r, t_m, ranks = cau_recall_mrr_org(preds, batch_out, cutoff=self.cut_off)
-                    t_repeat = repeat_ratio(batch_in, preds, cutoff=self.cut_off)
+                    t_repeat = repeat_ratio_sample(batch_in, preds, k=self.cut_off)
                     test_data.pack_ext_matrix('alpha', alpha, tmp_batch_ids)
                     test_data.pack_preds(ranks, tmp_batch_ids)
                     c_loss += list(loss)
@@ -464,6 +471,6 @@ class Seq2SeqAttNN(NN):
                     repeat += t_repeat
         r, m =cau_samples_recall_mrr(test_data.samples,self.cut_off)
         print (r,m)
-        print(f"Mean Repeat ratio: {round(sum(repeat) / len(repeat), 3)}")
+        #print(f"Mean Repeat ratio: {sum_repeat / num_items}")
         print (np.mean(c_loss))
-        return  np.mean(recall), np.mean(mrr)#, np.mean(repeat)
+        return  np.mean(recall), np.mean(mrr), np.mean(repeat)
