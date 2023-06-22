@@ -13,7 +13,7 @@ from torch.utils.data import Dataset
 import numpy as np
 
 
-def load_data(root, valid_portion=0.1, maxlen=19, sort_by_len=False):
+def load_data(path_train_data, path_test_data, valid_portion=0.1, maxlen=19, sort_by_len=False):
     '''Loads the dataset
 
     :type path: String
@@ -34,8 +34,6 @@ def load_data(root, valid_portion=0.1, maxlen=19, sort_by_len=False):
     '''
 
     # Load the dataset
-    path_train_data = '/home/lcur2471/rs_stamp/narm/datasets/diginetica/train_session.txt'
-    path_test_data = '/home/lcur2471/rs_stamp/narm/datasets/diginetica/test_session.txt'
     with open(path_train_data, 'rb') as f1:
         train_set = pickle.load(f1)
 
