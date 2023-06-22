@@ -12,7 +12,7 @@ from util.Pooler import pooler
 from basic_layer.FwNn3AttLayer import FwNnAttLayer
 from util.FileDumpLoad import dump_file
 from util.save_results import save_results
-from util.RepeatRatio import repeat_ratio_sample
+from util.RepeatRatio import repeat_ratio_batch
 from tqdm import tqdm
 
 class Seq2SeqAttNN(NN):
@@ -461,7 +461,7 @@ class Seq2SeqAttNN(NN):
                         feed_dict=feed_dict
                     )
                     t_r, t_m, ranks = cau_recall_mrr_org(preds, batch_out, cutoff=self.cut_off)
-                    t_repeat = repeat_ratio_sample(batch_in, preds, k=self.cut_off)
+                    t_repeat = repeat_ratio_batch(batch_in, preds, k=self.cut_off)
                     test_data.pack_ext_matrix('alpha', alpha, tmp_batch_ids)
                     test_data.pack_preds(ranks, tmp_batch_ids)
                     c_loss += list(loss)
