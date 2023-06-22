@@ -148,3 +148,26 @@ python -u main.py /
        --train_path 'Path to narm/datasetsyoochoose1_4/train.txt' / 
        --test_path 'Path to narm/datasetsyoochoose1_4/test.txt'
 ```
+
+## User-based split
+
+We were only able to implement the user-based split on the Diginetica dataset, since yoochoose does not include user ID's.
+
+#### STAMP
+```
+python -u cmain.py / 
+       -m stamp_cikm /
+       -d cikm16 / 
+       --epoch 30 /
+       --reload /
+       --user_split
+```
+
+#### NARM
+```
+python -u narm/main.py / 
+       --train_path 'path to train_user.txt in narm/datasets/diginetica' / 
+       --test_path 'path to test_user.txt in narm/datasets/diginetica' /
+       --diginetica
+       --user_split
+```

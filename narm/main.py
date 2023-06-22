@@ -40,7 +40,7 @@ parser.add_argument('--lr_dc_step', type=int, default=80, help='the number of st
 parser.add_argument('--test', action='store_true', help='test')
 parser.add_argument('--topk', type=int, default=10, help='number of top score items selected for calculating recall and mrr metrics')
 parser.add_argument('--valid_portion', type=float, default=0.1, help='split the portion of training set as validation set')
-parser.add_argument('--user_based', action='store_true', help='test')
+parser.add_argument('--user_split', action='store_true', help='test')
 parser.add_argument('--diginetica', action='store_true', help='train on diginetica')
 parser.add_argument('--train_path', type=str, default='', required=True, help='Path to training data after its been preprocessed')
 parser.add_argument('--test_path', type=str, default='', required=True, help='Path to testing data after its been preprocessed')
@@ -62,7 +62,7 @@ def main():
     test_loader = DataLoader(test_data, batch_size = args.batch_size, shuffle = False, collate_fn = collate_fn)
 
     n_items = 0
-    if args.user_based:
+    if args.user_split:
         n_items = 49927 # for user based split
     else:
         if args.diginetica:
