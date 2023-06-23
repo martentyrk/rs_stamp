@@ -35,11 +35,10 @@ args = parser.parse_args()
 if args.dataset == 'diginetica':
     dataset = paths['root_path']+paths['project_name']+'/datas/cikm16/raw/train-item-views.csv'
 elif args.dataset =='yoochoose':
-    
     with open(paths['yoochoose_clicks_path'], 'r') as f, open('yoochoose-clicks-withHeader.dat', 'w') as fn:
-    fn.write('sessionId,timestamp,itemId,category'+'\n')
-    for line in f:
-        fn.write(line)
+        fn.write('sessionId,timestamp,itemId,category'+'\n')
+        for line in f:
+            fn.write(line)
         
     dataset = 'yoochoose-clicks-withHeader.dat'
 

@@ -73,7 +73,7 @@ def main():
     model = NARM(n_items, args.hidden_size, args.embed_dim, args.batch_size).to(device)
 
     if args.test:
-        ckpt = torch.load('/home/lcur2471/rs_stamp/narm/latest_checkpoint_session_yoochoose1_4_epoch_30.pth.tar')
+        ckpt = torch.load('/home/lcur2471/rs_stamp/narm/latest_checkpoint_session_epoch_30_diginetica.pth.tar')
         model.load_state_dict(ckpt['state_dict'])
         recall, mrr = validate(test_loader, model)
         print("Test: Recall@{}: {:.4f}, MRR@{}: {:.4f}".format(args.topk, recall, args.topk, mrr))
