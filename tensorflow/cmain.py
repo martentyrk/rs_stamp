@@ -15,8 +15,7 @@ from util.Randomer import Randomer
 from util.kfolds import split_k_folds
 
 
-from util.save_results import save_results
-
+from util.save_results import save_results, save_repeat_ratio_results
 
 def load_conf(model, modelconf):
     '''
@@ -225,8 +224,9 @@ def main(options, modelconf="config/model.conf"):
                         sent_data = train_data
                 sent_data = test_data
                 saver.restore(sess, config['saved_model'])
-                recall, mrr = model.test(sess, sent_data)
+                recall, mrr, repeat_ratio = model.test(sess, sent_data)
                 save_results(config, recall, mrr)
+                save_repeat_ratio_results(config, repeat_ratio)
                 print('--------------- TESTING FINISHED ---------------')
 
 
