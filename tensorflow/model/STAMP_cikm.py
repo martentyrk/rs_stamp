@@ -471,6 +471,5 @@ class Seq2SeqAttNN(NN):
                     repeat += t_repeat
         r, m =cau_samples_recall_mrr(test_data.samples,self.cut_off)
         print (r,m)
-        #print(f"Mean Repeat ratio: {sum_repeat / num_items}")
         print (np.mean(c_loss))
         return  np.mean(recall), np.mean(mrr), np.mean(repeat)
