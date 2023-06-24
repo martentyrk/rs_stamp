@@ -40,7 +40,11 @@ parser.add_argument('--lr_dc_step', type=int, default=80, help='the number of st
 parser.add_argument('--test', action='store_true', help='test')
 parser.add_argument('--topk', type=int, default=10, help='number of top score items selected for calculating recall and mrr metrics')
 parser.add_argument('--valid_portion', type=float, default=0.1, help='split the portion of training set as validation set')
-parser.add_argument('--user_based', action='store_true', help='test')
+parser.add_argument('--user_split', action='store_true', help='test')
+parser.add_argument('--diginetica', action='store_true', help='train on diginetica')
+parser.add_argument('--train_path', type=str, default='', required=True, help='Path to training data after its been preprocessed')
+parser.add_argument('--test_path', type=str, default='', required=True, help='Path to testing data after its been preprocessed')
+parser.add_argument('--checkpoint', type=str, default='latest_checkpoint_session_epoch_30_diginetica.pth.tar', help='Name of the checkpoint')
 args = parser.parse_args()
 print(args)
 
@@ -49,7 +53,7 @@ device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
 def main():
     print('Loading data...')
-    train, valid, test = load_data('', valid_portion=args.valid_portion)
+    train, valid, test = load_data(args.train_path, args.test_path, valid_portion=args.valid_portion)
     
     train_data = RecSysDataset(train)
     valid_data = RecSysDataset(valid)
@@ -59,15 +63,19 @@ def main():
     test_loader = DataLoader(test_data, batch_size = args.batch_size, shuffle = False, collate_fn = collate_fn)
 
     n_items = 0
-    if args.user_based:
+    if args.user_split:
         n_items = 49927 # for user based split
     else:
-        n_items = 43098 # for session based split
+        if args.diginetica:
+            n_items = 43098 # for session based split
+        else:
+            n_items = 37484
 
+    print(n_items, 'n_items')
     model = NARM(n_items, args.hidden_size, args.embed_dim, args.batch_size).to(device)
 
     if args.test:
-        ckpt = torch.load('/home/lcur2471/narm/30_epoch_checkpoint_user_split.pth.tar')
+        ckpt = torch.load(args.checkpoint)
         model.load_state_dict(ckpt['state_dict'])
         recall, mrr = validate(test_loader, model)
         print("Test: Recall@{}: {:.4f}, MRR@{}: {:.4f}".format(args.topk, recall, args.topk, mrr))
@@ -92,7 +100,7 @@ def main():
             'optimizer': optimizer.state_dict()
         }
 
-        torch.save(ckpt_dict, 'latest_checkpoint_session_epoch_30.pth.tar')
+        torch.save(ckpt_dict, args.checkpoint)
 
 
 def trainForEpoch(train_loader, model, optimizer, epoch, num_epochs, criterion, log_aggr=1):

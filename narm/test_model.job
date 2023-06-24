@@ -5,7 +5,7 @@
 #SBATCH --job-name=train_stamp_cikm
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=4
-#SBATCH --time=01:30:00
+#SBATCH --time=00:30:00
 #SBATCH --mem=64000M
 #SBATCH --output=training_slurm_%A.out
 
@@ -13,4 +13,4 @@ module purge
 
 source activate narm
 
-srun python3 main.py --test --topk 20
+srun python3 main.py --test --topk 20 --checkpoint '/home/lcur2471/rs_stamp/narm/latest_checkpoint_session_yoochoose1_4_epoch_30.pth.tar' --train_path '/home/lcur2471/rs_stamp/narm/datasets/yoochoose1_4/train.txt' --test_path '/home/lcur2471/rs_stamp/narm/datasets/yoochoose1_4/test.txt'

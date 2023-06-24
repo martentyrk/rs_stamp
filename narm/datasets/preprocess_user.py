@@ -22,19 +22,16 @@ import datetime
 import os
 from tqdm import tqdm
 
-parser = argparse.ArgumentParser()
-parser.add_argument('--dataset', default='diginetica', help='dataset name')
-args = parser.parse_args()
 
 
-if args.dataset == 'diginetica':
-    dataset = '/home/lcur2471/rs_stamp/datas/cikm16/raw/train-item-views.csv'
-    train_ids = '/home/lcur2471/rs_stamp/datas/cikm16/processed/train_ids.txt'
-    test_ids = '/home/lcur2471/rs_stamp/datas/cikm16/processed/test_ids.txt'
+
+dataset = paths['root_path']+paths['project_name']+'/datas/cikm16/raw/train-item-views.csv'
+train_ids = paths['root_path']+paths['project_name']+'/datas/cikm16/processed/train_ids.txt'
+test_ids = paths['root_path']+paths['project_name']+'/datas/cikm16/processed/test_ids.txt'
     
-    with open(train_ids, 'rb') as f, open(test_ids, 'rb') as test_f:
-        train_user_ids = pickle.load(f)
-        test_user_ids = pickle.load(test_f)
+with open(train_ids, 'rb') as f, open(test_ids, 'rb') as test_f:
+    train_user_ids = pickle.load(f)
+    test_user_ids = pickle.load(test_f)
 
 
 

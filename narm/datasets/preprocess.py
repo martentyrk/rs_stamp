@@ -22,12 +22,26 @@ import datetime
 import os
 from tqdm import tqdm
 
+import yaml
+
+with open('../../paths.yaml', 'r') as file:
+    paths = yaml.safe_load(file)
+
 parser = argparse.ArgumentParser()
-parser.add_argument('--dataset', default='diginetica', help='dataset name')
+parser.add_argument('--dataset', default='yoochoose', help='dataset name')
 args = parser.parse_args()
 
+
 if args.dataset == 'diginetica':
-    dataset = '/home/lcur2471/rs_stamp/datas/cikm16/raw/train-item-views.csv'
+    dataset = paths['root_path']+paths['project_name']+'/datas/cikm16/raw/train-item-views.csv'
+elif args.dataset =='yoochoose':
+    with open(paths['yoochoose_clicks_path'], 'r') as f, open('yoochoose-clicks-withHeader.dat', 'w') as fn:
+        fn.write('sessionId,timestamp,itemId,category'+'\n')
+        for line in f:
+            fn.write(line)
+        
+    dataset = 'yoochoose-clicks-withHeader.dat'
+
 
 print("-- Starting @ %ss" % datetime.datetime.now())
 with open(dataset, "r") as f:
@@ -107,6 +121,7 @@ for s in list(sess_clicks):
 # Split out test set based on dates
 dates = list(sess_date.items())
 maxdate = dates[0][1]
+
 for _, date in dates:
     if maxdate < date:
         maxdate = date
@@ -117,11 +132,10 @@ if args.dataset == 'yoochoose':
     splitdate = maxdate - 86400 * 1  # the number of seconds for a day：86400
 else:
     splitdate = maxdate - 86400 * 7
-    
+
 print('Splitting date', splitdate)      # Yoochoose: ('Split date', 1411930799.0)
 tra_sess = filter(lambda x: x[1] < splitdate, dates)
 tes_sess = filter(lambda x: x[1] > splitdate, dates)
-
 
 # Sort sessions by date
 tra_sess = sorted(tra_sess, key=operator.itemgetter(1))     # [(sessionId, timestamp), (), ]
@@ -215,9 +229,9 @@ print('avg length: ', all/(len(tra_seqs) + len(tes_seqs) * 1.0))
 if args.dataset == 'diginetica':
     if not os.path.exists('diginetica'):
         os.makedirs('diginetica')
-    pickle.dump(tra, open('diginetica/train.txt', 'wb'))
-    pickle.dump(tes, open('diginetica/test.txt', 'wb'))
-    pickle.dump(tra_seqs, open('diginetica/all_train_seq.txt', 'wb'))
+    pickle.dump(tra, open('diginetica/train_session.txt', 'wb'))
+    pickle.dump(tes, open('diginetica/test_session.txt', 'wb'))
+    pickle.dump(tra_seqs, open('diginetica/all_train_seq_session.txt', 'wb'))
 elif args.dataset == 'yoochoose':
     if not os.path.exists('yoochoose1_4'):
         os.makedirs('yoochoose1_4')
@@ -237,7 +251,7 @@ elif args.dataset == 'yoochoose':
     pickle.dump(seq4, open('yoochoose1_4/all_train_seq.txt', 'wb'))
 
     pickle.dump(tra64, open('yoochoose1_64/train.txt', 'wb'))
-    pickle.dump(seq64, open('yoochoose1_64/all_train_seq_user.txt', 'wb'))
+    pickle.dump(seq64, open('yoochoose1_64/all_train_seq.txt', 'wb'))
 else:
     pass
 

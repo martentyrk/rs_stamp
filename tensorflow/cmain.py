@@ -33,6 +33,8 @@ mid_rsc15_64_emb_dict = "rsc15_64_emb_dict.data"
 
 cikm16_train = root_path + project_name +'/datas/cikm16/processed/cikm16_train_full.txt'
 cikm16_test = root_path + project_name +'/datas/cikm16/processed/cikm16_test.txt'
+cikm16_train_users = root_path + project_name +'/datas/cikm16/processed/cikm16_train_user_full.txt'
+cikm16_test_users = root_path + project_name +'/datas/cikm16/processed/cikm16_test_user.txt'
 mid_cikm16_emb_dict = "mid_datacikm16_emb_dict.data"
 
 def load_tt_datas(config={}, reload=True):
@@ -75,11 +77,18 @@ def load_tt_datas(config={}, reload=True):
             print("-----")
 
         if config['dataset'] == 'cikm16':
-            train_data, test_data, item2idx, n_items = load_data2(
-                cikm16_train,
-                cikm16_test,
-                class_num=config['class_num']
-            )
+            if config['user_split']:
+                train_data, test_data, item2idx, n_items = load_data2(
+                    cikm16_train_users,
+                    cikm16_test_users,
+                    class_num=config['class_num']
+                )
+            else:
+                train_data, test_data, item2idx, n_items = load_data2(
+                    cikm16_train,
+                    cikm16_test,
+                    class_num=config['class_num']
+                )
             config["n_items"] = n_items-1
             emb_dict = load_random(item2idx,edim=config['hidden_size'], init_std=config['emb_stddev'])
             config['pre_embedding'] = emb_dict
@@ -125,11 +134,19 @@ def load_tt_datas(config={}, reload=True):
             print("-----")
 
         if config['dataset'] == 'cikm16':
-            train_data, test_data, item2idx, n_items = load_data2(
-                cikm16_train,
-                cikm16_test,
-                class_num=config['class_num']
-            )
+            if config['user_split']:
+                train_data, test_data, item2idx, n_items = load_data2(
+                    cikm16_train_users,
+                    cikm16_test_users,
+                    class_num=config['class_num']
+                )
+            else:
+                train_data, test_data, item2idx, n_items = load_data2(
+                    cikm16_train,
+                    cikm16_test,
+                    class_num=config['class_num']
+                )
+                
             config["n_items"] = n_items-1
             path = '../datas/rsc15/embeddings/'
             emb_dict = load_file(path + mid_cikm16_emb_dict)
@@ -240,6 +257,11 @@ def option_parse():
         dest="epoch",
         default=10
     )
+    parser.add_option(
+        "--user_split",
+        action='store_true',
+        help='use the user_split dataset'
+    )
     (option, args) = parser.parse_args()
     return option
 
@@ -259,6 +281,7 @@ def main(options, modelconf="config/model.conf"):
     class_num = options.classnum
     is_train = not options.not_train
     is_save = not options.not_save_model
+    user_split = options.user_split
     model_path = options.model_path#paths['root_path']+paths['project_name']+options.model_path+model+dataset+'.ckpt'
 
     input_data = options.input_data
@@ -266,6 +289,7 @@ def main(options, modelconf="config/model.conf"):
 
     module, obj, config = load_conf(model, modelconf)
     config['model'] = model
+    config['user_split'] = user_split
     config['dataset'] = dataset
     config['class_num'] = class_num
     config['nepoch'] = epoch
