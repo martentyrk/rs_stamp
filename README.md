@@ -112,7 +112,8 @@ python -u cmain.py /
 python -u narm/main.py / 
        --train_path 'path to train_session.txt in narm/datasets/diginetica' / 
        --test_path 'path to test_session.txt in narm/datasets/diginetica' /
-       --diginetica
+       --diginetica /
+       --checkpoint 'checkpoint name'
 ```
 
 ### For Yoochoose
@@ -139,14 +140,16 @@ For the 64 version:
 ```
 python -u main.py / 
        --train_path 'Path to narm/datasetsyoochoose1_64/train.txt' / 
-       --test_path 'Path to narm/datasetsyoochoose1_64/test.txt'
+       --test_path 'Path to narm/datasetsyoochoose1_64/test.txt' /
+       --checkpoint 'checkpoint name'
 ```
 
 For the 4 version:
 ```
 python -u main.py / 
        --train_path 'Path to narm/datasetsyoochoose1_4/train.txt' / 
-       --test_path 'Path to narm/datasetsyoochoose1_4/test.txt'
+       --test_path 'Path to narm/datasetsyoochoose1_4/test.txt' /
+       --checkpoint 'checkpoint name'
 ```
 
 ## User-based split
@@ -168,6 +171,7 @@ python -u cmain.py /
 python -u narm/main.py / 
        --train_path 'path to train_user.txt in narm/datasets/diginetica' / 
        --test_path 'path to test_user.txt in narm/datasets/diginetica' /
-       --diginetica
+       --checkpoint 'checkpoint name' /
+       --diginetica /
        --user_split
 ```

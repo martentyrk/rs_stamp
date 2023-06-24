@@ -44,6 +44,7 @@ parser.add_argument('--user_split', action='store_true', help='test')
 parser.add_argument('--diginetica', action='store_true', help='train on diginetica')
 parser.add_argument('--train_path', type=str, default='', required=True, help='Path to training data after its been preprocessed')
 parser.add_argument('--test_path', type=str, default='', required=True, help='Path to testing data after its been preprocessed')
+parser.add_argument('--checkpoint', type=str, default='latest_checkpoint_session_epoch_30_diginetica.pth.tar', help='Name of the checkpoint')
 args = parser.parse_args()
 print(args)
 
@@ -70,10 +71,11 @@ def main():
         else:
             n_items = 37484
 
+    print(n_items, 'n_items')
     model = NARM(n_items, args.hidden_size, args.embed_dim, args.batch_size).to(device)
 
     if args.test:
-        ckpt = torch.load('/home/lcur2471/rs_stamp/narm/latest_checkpoint_session_epoch_30_diginetica.pth.tar')
+        ckpt = torch.load(args.checkpoint)
         model.load_state_dict(ckpt['state_dict'])
         recall, mrr = validate(test_loader, model)
         print("Test: Recall@{}: {:.4f}, MRR@{}: {:.4f}".format(args.topk, recall, args.topk, mrr))
@@ -98,7 +100,7 @@ def main():
             'optimizer': optimizer.state_dict()
         }
 
-        torch.save(ckpt_dict, 'latest_checkpoint_session_yoochoose1_4_epoch_30.pth.tar')
+        torch.save(ckpt_dict, args.checkpoint)
 
 
 def trainForEpoch(train_loader, model, optimizer, epoch, num_epochs, criterion, log_aggr=1):

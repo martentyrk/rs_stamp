@@ -13,4 +13,4 @@ module purge
 
 source activate narm
 
-srun python3 main.py --train_path '/home/lcur2471/rs_stamp/narm/datasets/yoochoose1_4/train.txt' --test_path '/home/lcur2471/rs_stamp/narm/datasets/yoochoose1_4/test.txt'
+srun python3 main.py --epoch 30 --train_path '/home/lcur2471/rs_stamp/narm/datasets/yoochoose1_4/train.txt' --test_path '/home/lcur2471/rs_stamp/narm/datasets/yoochoose1_4/test.txt'

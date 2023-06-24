@@ -13,4 +13,4 @@ module purge
 
 source activate narm
 
-srun python3 main.py --test --diginetica --topk 5 --train_path '/home/lcur2471/rs_stamp/narm/datasets/diginetica/train_session.txt' --test_path '/home/lcur2471/rs_stamp/narm/datasets/diginetica/test_session.txt'
+srun python3 main.py --test --topk 20 --checkpoint '/home/lcur2471/rs_stamp/narm/latest_checkpoint_session_yoochoose1_4_epoch_30.pth.tar' --train_path '/home/lcur2471/rs_stamp/narm/datasets/yoochoose1_4/train.txt' --test_path '/home/lcur2471/rs_stamp/narm/datasets/yoochoose1_4/test.txt'
