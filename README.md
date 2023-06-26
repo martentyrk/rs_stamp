@@ -50,7 +50,7 @@ To get the required data files run the following files in datas/rsc15:
 ## STAMP preprocessing
 
 ```
-python -u process_rsc.py
+python -u datas/rsc15/process_rsc.py
 ``` 
 
 ## NARM preprocessing
