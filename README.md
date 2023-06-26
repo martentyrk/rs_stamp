@@ -175,3 +175,32 @@ python -u narm/main.py /
        --diginetica /
        --user_split
 ```
+
+## K-fold cross-validation
+
+The K-fold cross-validation has been implemented for the STAMP model and the two datasets.
+
+#### CIKM16 / Diginetica
+The arguments below use an `@K` value of 10 (`--cutoff 10`), and 5 folds (`--kfolds 5`).
+```
+python cmain.py /
+       -m stamp_cikm /
+       -d cikm16 /
+       --epoch 30 /
+       --reload /
+       --kfolds 5 /
+       --cutoff 10
+```
+
+#### RSC15 / Yoochoose
+Equivalently to the Diginetica parameters, with either `rsc15_4` or `rsc15_64` as the `-d` argument, and `stamp_rsc` as the `-m` argument.
+```
+python cmain.py /
+       -m stamp_rsc /
+       -d rsc15_4 /
+       --epoch 30 /
+       --reload /
+       --kfolds 5 /
+       --cutoff 10
+```
+
