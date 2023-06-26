@@ -185,6 +185,7 @@ class Seq2SeqAttNN(NN):
         max_mrr = 0.0
         max_train_acc = 0.0
         for epoch in range(self.nepoch):   # epoch round.
+            print('Epoch:', epoch)
             batch = 0
             c = []
             cost = 0.0  # the cost of each epoch.
@@ -409,7 +410,6 @@ class Seq2SeqAttNN(NN):
                             self.last_inputs: batch_last,
                             self.lab_input: batch_out,
                             self.sequence_length: batch_seq_l
-
                         }
 
                         # train

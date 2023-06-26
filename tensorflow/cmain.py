@@ -2,8 +2,8 @@
 from optparse import OptionParser
 import tensorflow.compat.v1 as tf
 import pandas as pd
-import numpy as np
 
+import numpy as np
 import copy 
 from tqdm import tqdm
 import numpy as np
@@ -15,7 +15,6 @@ from data_prepare.data_loader import load_data
 from util.Config import read_conf
 from util.Randomer import Randomer
 from util.kfolds import split_k_folds
-from keras import backend as K
 
 from util.save_results import save_results
 
@@ -136,8 +135,11 @@ def option_parse():
             dest="kfolds",
             default=0
         )
-    
-
+    parser.add_option(
+        "--user_split",
+        action='store_true',
+        help='use the user_split dataset'
+    )
     (option, args) = parser.parse_args()
     return option
 
@@ -157,13 +159,15 @@ def main(options, modelconf="config/model.conf"):
     class_num = options.classnum
     test_model = options.test_model
     is_save = not options.not_save_model
-    model_path = options.model_path#paths['root_path']+paths['project_name']+options.model_path+model+dataset+'.ckpt'
+    user_split = options.user_split
+    model_path = options.model_path
 
     input_data = options.input_data
     epoch = options.epoch
 
     module_name, obj, config = load_conf(model, modelconf)
     config['model'] = model
+    config['user_split'] = user_split
     config['dataset'] = dataset
     config['class_num'] = class_num
     config['nepoch'] = epoch
