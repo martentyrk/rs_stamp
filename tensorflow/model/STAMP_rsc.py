@@ -11,7 +11,7 @@ from util.AccCalculater import cau_samples_recall_mrr
 from util.Pooler import pooler
 from basic_layer.FwNn3AttLayer import FwNnAttLayer
 from util.FileDumpLoad import dump_file
-
+from util.save_results import save_results
 
 class Seq2SeqAttNN(NN):
     """
@@ -323,14 +323,15 @@ class Seq2SeqAttNN(NN):
                 print ("                   max_recall: " + str(max_recall)+" max_mrr: "+str(max_mrr))
                 test_data.flush()
         if self.is_print:
+            val_results = save_results(self.config, max_recall, max_mrr, split='val')
             TIPrint(test_data.samples, self.config,
                     {'recall': max_recall, 'mrr': max_mrr}, True)
+            return val_results
 
     def test(self,sess,test_data):
 
         # calculate the acc
         print('Measuring Recall@{} and MRR@{}'.format(self.cut_off, self.cut_off))
-
         mrr, recall = [], []
         c_loss =[]
         batch = 0

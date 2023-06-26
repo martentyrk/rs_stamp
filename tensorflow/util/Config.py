@@ -89,7 +89,7 @@ def read_conf(model, path):
 
     models = None 
     mdl = None
-    if isinstance(model, str) or isinstance(model, unicode):
+    if isinstance(model, str):
         mdl = model
         models = [model]
     elif isinstance(model, list):

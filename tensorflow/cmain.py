@@ -1,162 +1,24 @@
 # coding=utf-8
 from optparse import OptionParser
 import tensorflow.compat.v1 as tf
-# tf.disable_v2_behavior()
 import pandas as pd
+
+import numpy as np
+import copy 
+from tqdm import tqdm
 import numpy as np
 from data_prepare.entity.samplepack import Samplepack
-from data_prepare.load_dict import load_random
-from data_prepare.cikm16data_read import load_data2
-from data_prepare.rsyc15data_read_p import load_data_p
+from data_prepare import data_loader
+
+from data_prepare.data_loader import load_data
+
 from util.Config import read_conf
-from util.FileDumpLoad import dump_file, load_file
 from util.Randomer import Randomer
+from util.kfolds import split_k_folds
 
-import yaml
+from util.save_results import save_results
 
-with open('../paths.yaml', 'r') as file:
-    paths = yaml.safe_load(file)
-
-# the data path.
-root_path = paths['root_path']
-project_name = paths['project_name']
-
-# the pretreatment data path.
-rsc15_train = root_path + project_name +'/datas/rsc15/processed/rsc15_train_full.txt'
-rsc15_test = root_path + project_name +'/datas/rsc15/processed/rsc15_test.txt'
-mid_rsc15_train_data = "rsc15_train.data"
-mid_rsc15_test_data = "rsc15_test.data"
-mid_rsc15_emb_dict = "rsc15_emb_dict.data"
-mid_rsc15_4_emb_dict = "rsc15_4_emb_dict.data"
-mid_rsc15_64_emb_dict = "rsc15_64_emb_dict.data"
-
-
-cikm16_train = root_path + project_name +'/datas/cikm16/processed/cikm16_train_full.txt'
-cikm16_test = root_path + project_name +'/datas/cikm16/processed/cikm16_test.txt'
-cikm16_train_users = root_path + project_name +'/datas/cikm16/processed/cikm16_train_user_full.txt'
-cikm16_test_users = root_path + project_name +'/datas/cikm16/processed/cikm16_test_user.txt'
-mid_cikm16_emb_dict = "mid_datacikm16_emb_dict.data"
-
-def load_tt_datas(config={}, reload=True):
-    '''
-    loda data.
-    config: 获得需要加载的数据类型，放入pre_embedding.
-    nload: 是否重新解析原始数据
-    '''
-
-    if reload:
-        print( "reload the datasets.")
-        print (config['dataset'])
-
-        if config['dataset'] == 'rsc15_4':
-            train_data, test_data, item2idx, n_items = load_data_p(
-                rsc15_train,
-                rsc15_test,
-                pro = 4
-            )
-
-            config["n_items"] = n_items-1
-            emb_dict = load_random(item2idx,edim=config['hidden_size'], init_std=config['emb_stddev'])
-            config['pre_embedding'] = emb_dict
-            path = '../datas/rsc15/embeddings/'
-            dump_file([emb_dict, path+mid_rsc15_4_emb_dict])
-            print("-----")
-
-        if config['dataset'] == 'rsc15_64':
-            train_data, test_data, item2idx, n_items = load_data_p(
-                rsc15_train,
-                rsc15_test,
-                pro = 64
-            )
-
-            config["n_items"] = n_items-1
-            emb_dict = load_random(item2idx, edim=config['hidden_size'], init_std=config['emb_stddev'])
-            config['pre_embedding'] = emb_dict
-            path = '../datas/rsc15/embeddings/'
-            dump_file([emb_dict, path + mid_rsc15_64_emb_dict])
-            print("-----")
-
-        if config['dataset'] == 'cikm16':
-            if config['user_split']:
-                train_data, test_data, item2idx, n_items = load_data2(
-                    cikm16_train_users,
-                    cikm16_test_users,
-                    class_num=config['class_num']
-                )
-            else:
-                train_data, test_data, item2idx, n_items = load_data2(
-                    cikm16_train,
-                    cikm16_test,
-                    class_num=config['class_num']
-                )
-            config["n_items"] = n_items-1
-            emb_dict = load_random(item2idx,edim=config['hidden_size'], init_std=config['emb_stddev'])
-            config['pre_embedding'] = emb_dict
-            path = '../datas/cikm16/embeddings/'
-            dump_file([emb_dict, path+mid_cikm16_emb_dict])
-            print("-----")
-
-    else:
-        print ("not reload the datasets.")
-        print(config['dataset'])
-
-        if config['dataset'] == 'rsc15_4':
-            train_data, test_data, item2idx, n_items = load_data_p(
-                rsc15_train,
-                rsc15_test,
-                pro=4
-            )
-
-            config["n_items"] = n_items-1
-            path = '../datas/rsc15/embeddings/'
-            emb_dict = load_file(path + mid_rsc15_4_emb_dict)
-            config['pre_embedding'] = emb_dict[0]
-            # path = 'datas/mid_data'
-            # dump_file([emb_dict, path+mid_rsc15_emb_dict])
-            print("-----")
-
-        if config['dataset'] == 'rsc15_64':
-            train_data, test_data, item2idx, n_items = load_data_p(
-                rsc15_train,
-                rsc15_test,
-                pro=64
-            )
-
-            config["n_items"] = n_items-1
-            # emb_dict = load_random(n_items, edim=config['hidden_size'], init_std=config['emb_stddev'])
-            # path = 'datas/train_emb/'
-            # emb_dict = load_file(path + "rsc15_64_emb.data")
-            path = '../datas/rsc15/embeddings/'
-            emb_dict = load_file(path+mid_rsc15_64_emb_dict)
-            config['pre_embedding'] = emb_dict[0]
-
-            # dump_file([emb_dict, path + mid_rsc15_emb_dict])
-            print("-----")
-
-        if config['dataset'] == 'cikm16':
-            if config['user_split']:
-                train_data, test_data, item2idx, n_items = load_data2(
-                    cikm16_train_users,
-                    cikm16_test_users,
-                    class_num=config['class_num']
-                )
-            else:
-                train_data, test_data, item2idx, n_items = load_data2(
-                    cikm16_train,
-                    cikm16_test,
-                    class_num=config['class_num']
-                )
-                
-            config["n_items"] = n_items-1
-            path = '../datas/rsc15/embeddings/'
-            emb_dict = load_file(path + mid_cikm16_emb_dict)
-            # path = 'datas/train_emb/'
-            # emb_dict = load_file(path + "cikm16_emb.data")
-            config['pre_embedding'] = emb_dict[0]
-            print("-----")
-
-    return train_data, test_data
-
+import importlib
 
 def load_conf(model, modelconf):
     '''
@@ -219,11 +81,11 @@ def option_parse():
     )
 
     parser.add_option(
-        "-a",
-        "--nottrain",
+        "-t",
+        "--test_model",
         action='store_true',
-        dest="not_train",
-        default=False
+        dest="test_model",
+        default=True
     )
     parser.add_option(
         "-n",
@@ -238,8 +100,7 @@ def option_parse():
         action='store',
         type='string',
         dest="model_path",
-        #paths['root_path']+paths['project_name']+'/tensorflow
-        default='/output/saved_models/'
+        default='output/saved_models/'
     )
     parser.add_option(
         "-i",
@@ -257,6 +118,23 @@ def option_parse():
         dest="epoch",
         default=10
     )
+    parser.add_option(
+            "-k",
+            "--cutoff",
+            action='store',
+            type='int',
+            dest="cutoff",
+            default=10
+        )
+    
+    parser.add_option(
+            "-f",
+            "--kfolds",
+            action='store',
+            type='int',
+            dest="kfolds",
+            default=0
+        )
     parser.add_option(
         "--user_split",
         action='store_true',
@@ -279,67 +157,89 @@ def main(options, modelconf="config/model.conf"):
     dataset = options.dataset
     reload = options.reload
     class_num = options.classnum
-    is_train = not options.not_train
+    test_model = options.test_model
     is_save = not options.not_save_model
     user_split = options.user_split
-    model_path = options.model_path#paths['root_path']+paths['project_name']+options.model_path+model+dataset+'.ckpt'
+    model_path = options.model_path
 
     input_data = options.input_data
     epoch = options.epoch
 
-    module, obj, config = load_conf(model, modelconf)
+    module_name, obj, config = load_conf(model, modelconf)
     config['model'] = model
     config['user_split'] = user_split
     config['dataset'] = dataset
     config['class_num'] = class_num
     config['nepoch'] = epoch
     config['model_save_path'] = model_path
-    
-    # metric @ k
-    config['cut_off'] = 10
-    print(config)
-    train_data, test_data = load_tt_datas(config, reload)
-    
-    #print(module)
-    # model.STAMP_cikm
-    
-    module = __import__(module, fromlist=True)
+    config['test_model'] = test_model
 
-    #print(module)
-    # <module 'model.STAMP_cikm' from '/home/andre/Documents/GitHub/rs_stamp/tensorflow/model/STAMP_cikm.py'> 
+
+    # metric @ k
+    config['cut_off'] = options.cutoff
+    config['k_folds'] = options.kfolds
+    print(config['model'])
+    best_recall = 0
+    best_model_graph = None
+    train_data, test_data = load_data(config, reload, kfolds=options.kfolds)
 
     # setup randomer
     Randomer.set_stddev(config['stddev'])
-    with tf.Graph().as_default():
-        # build model
-        model = getattr(module, obj)(config)
-        model.build_model()
-        if is_save or not is_train:
-            saver = tf.train.Saver(max_to_keep=30)
-        else:
-            saver = None
-        # run
-        with tf.Session() as sess:
-            sess.run(tf.global_variables_initializer())
-            if is_train:
-                print(dataset)
-                if dataset == "cikm16":
-                    model.train(sess, train_data, test_data, saver, threshold_acc=config['cikm_threshold_acc'])
-                else:
-                    model.train(sess, train_data, test_data, saver, threshold_acc=config['recsys_threshold_acc'])
-                # if dataset == "rsc15":
-                #     model.train(sess, train_data, test_data, saver, threshold_acc=config['recsys_threshold_acc'])
+    config_key = 'cikm_threshold_acc' if dataset=='cikm16' else 'recsys_threshold_acc'
+    module = importlib.import_module(module_name)
+    if options.kfolds > 1:
+        best_model_path = f"{config['model_save_path']}{config['model']}-{config['dataset']}-{config['k_folds']}folds-atk{config['cut_off']}-best_model.ckpt"
 
+        for fold in tqdm(range(options.kfolds)):
+            cur_fold_graph = tf.Graph()
+            with cur_fold_graph.as_default():
+                model = getattr(module, obj)(config)
+                model.build_model()
+
+                # need to do this after each fold
+                if is_save or not test_model:
+                    saver = tf.train.Saver(max_to_keep=30)
+                else:
+                    saver = None
+                init = tf.global_variables_initializer()
+                fold_train_data, fold_val_data = train_data[fold]
+                with tf.Session() as sess:
+                    sess.run(init)
+                    val_results = model.train(sess, fold_train_data, fold_val_data, saver, threshold_acc=config[config_key])
+
+                    # if the P@K is the best, save the model
+                    if val_results['recall'] > best_recall:
+                        best_recall = val_results['recall']
+                        saver.save(sess, best_model_path)
+                        best_model_graph = cur_fold_graph
+                        best_model = model
+
+
+    else:
+        with tf.Graph().as_default():
+            model = getattr(module, obj)(config)
+            model.build_model()
+            if is_save or not test_model:
+                saver = tf.train.Saver(max_to_keep=30)
             else:
-                if input_data == "test":
-                    sent_data = test_data
-                elif input_data == "train":
-                    sent_data = train_data
+                saver = None
+            with tf.Session() as sess:
+                sess.run(tf.global_variables_initializer())
+                model.train(sess, train_data, test_data, saver, threshold_acc=config[config_key])
+    if test_model:
+        with best_model_graph.as_default():
+            if input_data == "test":
+                sent_data = test_data
+            elif input_data == "train":
+                if options.kfolds > 1:
+                    sent_data = [fold for fold in train_data]
                 else:
-                    sent_data = test_data
-                saver.restore(sess, model_path)
-                model.test(sess, sent_data)
-
+                    sent_data = train_data
+            sent_data = test_data
+            with tf.Session() as sess:
+                saver.restore(sess, best_model_path)
+                recall, mrr = best_model.test(sess, sent_data)
+            save_results(config, recall, mrr)
 
 if __name__ == '__main__':
     options = option_parse()

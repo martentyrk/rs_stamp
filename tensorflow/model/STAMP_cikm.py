@@ -11,7 +11,7 @@ from util.AccCalculater import cau_samples_recall_mrr
 from util.Pooler import pooler
 from basic_layer.FwNn3AttLayer import FwNnAttLayer
 from util.FileDumpLoad import dump_file
-
+from util.save_results import save_results
 
 class Seq2SeqAttNN(NN):
     """
@@ -323,9 +323,11 @@ class Seq2SeqAttNN(NN):
                         self.save_model(sess, self.config, saver)
                 print ("                   max_recall: " + str(max_recall)+" max_mrr: "+str(max_mrr))
                 test_data.flush()
-        # if self.is_print:
-        #     TIPrint(test_data.samples, self.config,
-        #             acc={'recall': max_recall, 'mrr': max_mrr}, print_att=True)
+        if self.is_print:
+            val_results = save_results(self.config, max_recall, max_mrr, split='val')
+            TIPrint(test_data.samples, self.config,
+                    {'recall': max_recall, 'mrr': max_mrr}, True)
+            return val_results
 
     def test(self,sess,test_data):
 
