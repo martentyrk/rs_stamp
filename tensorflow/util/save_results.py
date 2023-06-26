@@ -16,7 +16,6 @@ def save_results(config, recall, mrr, split='test'):
     results_df.to_csv(path)
     return results_dict
 
-
 def save_repeat_ratio_results(config, repeat_ratio):
     path = f"output/repeat_ratio_results.csv"
     results_dict = {'time':time.strftime("%Y%m%d%H%M", time.localtime()), 'model': config['model'], 'dataset': config['dataset'], '@k':config['cut_off'], 'kfolds':config['k_folds'], 'repeat_ratio':repeat_ratio}

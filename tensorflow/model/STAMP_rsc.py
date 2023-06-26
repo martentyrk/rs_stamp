@@ -325,9 +325,10 @@ class Seq2SeqAttNN(NN):
                 print ("                   max_recall: " + str(max_recall)+" max_mrr: "+str(max_mrr) + " repeat: " + str(repeat))
                 test_data.flush()
         if self.is_print:
-            save_results(self.config, max_recall, max_mrr, split='val')
+            val_results = save_results(self.config, max_recall, max_mrr, split='val')
             TIPrint(test_data.samples, self.config,
                     {'recall': max_recall, 'mrr': max_mrr, 'repeat': repeat}, True)
+            return val_results
 
     def test(self,sess,test_data):
 

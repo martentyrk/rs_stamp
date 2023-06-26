@@ -63,9 +63,12 @@ class NN(object):
         )
         return lr
 
-    def save_model(self, sess, config, saver=None):
+    def save_model(self, sess, config, saver=None, val=False):
         suf = time.strftime("%Y%m%d%H%M", time.localtime())[4:]
-        path = f"{config['model_save_path']}{config['model']}-{config['dataset']}-{config['k_folds']}folds-atk{config['cut_off']}-{suf}.ckpt"
+        if val == True:
+            path = f"{config['model_save_path']}{config['model']}-{config['dataset']}-{config['k_folds']}folds-atk{config['cut_off']}-best_model.ckpt"
+        else:
+            path = f"{config['model_save_path']}{config['model']}-{config['dataset']}-{config['k_folds']}folds-atk{config['cut_off']}-{suf}.ckpt"
         if saver is not None:
             saver.save(sess, path)
         config['saved_model'] = path

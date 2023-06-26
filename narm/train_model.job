@@ -1,0 +1,16 @@
+#!/bin/bash
+
+#SBATCH --partition=gpu_titanrtx_shared_course
+#SBATCH --gres=gpu:1
+#SBATCH --job-name=train_stamp_cikm
+#SBATCH --ntasks=1
+#SBATCH --cpus-per-task=4
+#SBATCH --time=14:00:00
+#SBATCH --mem=64000M
+#SBATCH --output=training_slurm_%A.out
+
+module purge
+
+source activate narm
+
+srun python3 main.py --epoch 30 --train_path '/home/lcur2471/rs_stamp/narm/datasets/yoochoose1_4/train.txt' --test_path '/home/lcur2471/rs_stamp/narm/datasets/yoochoose1_4/test.txt'
