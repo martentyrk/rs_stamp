@@ -38,13 +38,6 @@ class NN(object):
         self.optimizer = tf.train.AdamOptimizer(self.lr)
         grads_and_vars = self.optimizer.compute_gradients(loss, params)
         if self.max_grad_norm != None:
-            print([gv[0] for gv in grads_and_vars])
-            print(len([gv[0] for gv in grads_and_vars]))
-            
-            print(self.max_grad_norm)
-            print([gv[1] for gv in grads_and_vars])
-            print(len([gv[1] for gv in grads_and_vars]))
-            
             clipped_grads_and_vars = [
                 (tf.clip_by_norm(gv[0], self.max_grad_norm), gv[1]) for gv in grads_and_vars
             ]
