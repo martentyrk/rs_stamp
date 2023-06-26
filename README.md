@@ -67,25 +67,24 @@ Check for the Data field to download everything here: https://competitions.codal
 
 The file we need is train-item-views.csv
 
-Once the file is downloaded and under datas/cihm16/raw
+Once the file is downloaded and under datas/cikm16/raw
 run the following two snippets
 
 The first one divides the data by session and the second one by users. We also save the user id's of training and testing in order to have the same train/test split for NARM
 
 ## STAMP
 ```
-python process_cikm.py
+python -u datas/cikm16/process_cikm.py
 ```
 ```
-python process_cikm_users.py
+python -u datas/cikm16/process_cikm_users.py
 ```
 
 ## NARM
 Files will appear under narm/datasets
 
 ```
-python -u narm/datasets/preprocess.py /
-       --dataset diginetica
+python -u narm/datasets/preprocess.py --dataset diginetica
 ```
 
 ```
@@ -100,10 +99,10 @@ python -u narm/datasets/preprocess_user.py
 
 #### STAMP
 ```
-python -u cmain.py / 
-       -m stamp_cikm /
-       -d cikm16 / 
-       --epoch 30 /
+python -u cmain.py \
+       -m stamp_cikm \
+       -d cikm16 \
+       --epoch 30 \
        --reload
 ```
 
@@ -121,34 +120,34 @@ python -u narm/main.py /
 #### STAMP
 For the 64 version:
 ```
-python -u cmain.py /
-       -m stamp_rsc / 
-       -d rsc15_64 /
+python -u cmain.py \
+       -m stamp_rsc \ 
+       -d rsc15_64 \
        --epoch 30
 ```
 
 For the 4 version:
 ```
-python -u cmain.py /
-       -m stamp_rsc / 
-       -d rsc15_4 /
+python -u cmain.py \
+       -m stamp_rsc \ 
+       -d rsc15_4 \
        --epoch 30
 ```
 
 #### NARM
 For the 64 version:
 ```
-python -u main.py / 
-       --train_path 'Path to narm/datasetsyoochoose1_64/train.txt' / 
-       --test_path 'Path to narm/datasetsyoochoose1_64/test.txt' /
+python -u main.py \
+       --train_path 'Path to narm/datasetsyoochoose1_64/train.txt' \
+       --test_path 'Path to narm/datasetsyoochoose1_64/test.txt' \
        --checkpoint 'checkpoint name'
 ```
 
 For the 4 version:
 ```
-python -u main.py / 
-       --train_path 'Path to narm/datasetsyoochoose1_4/train.txt' / 
-       --test_path 'Path to narm/datasetsyoochoose1_4/test.txt' /
+python -u main.py \
+       --train_path 'Path to narm/datasetsyoochoose1_4/train.txt' \
+       --test_path 'Path to narm/datasetsyoochoose1_4/test.txt' \
        --checkpoint 'checkpoint name'
 ```
 
@@ -158,21 +157,21 @@ We were only able to implement the user-based split on the Diginetica dataset, s
 
 #### STAMP
 ```
-python -u cmain.py / 
-       -m stamp_cikm /
-       -d cikm16 / 
-       --epoch 30 /
-       --reload /
+python -u cmain.py \
+       -m stamp_cikm \
+       -d cikm16 \
+       --epoch 30 \
+       --reload \
        --user_split
 ```
 
 #### NARM
 ```
-python -u narm/main.py / 
-       --train_path 'path to train_user.txt in narm/datasets/diginetica' / 
-       --test_path 'path to test_user.txt in narm/datasets/diginetica' /
-       --checkpoint 'checkpoint name' /
-       --diginetica /
+python -u narm/main.py \
+       --train_path 'path to train_user.txt in narm/datasets/diginetica' \
+       --test_path 'path to test_user.txt in narm/datasets/diginetica' \
+       --checkpoint 'checkpoint name' \
+       --diginetica \
        --user_split
 ```
 
@@ -183,24 +182,24 @@ The K-fold cross-validation has been implemented for the STAMP model and the two
 #### CIKM16 / Diginetica
 The arguments below use an `@K` value of 10 (`--cutoff 10`), and 5 folds (`--kfolds 5`).
 ```
-python cmain.py /
-       -m stamp_cikm /
-       -d cikm16 /
-       --epoch 30 /
-       --reload /
-       --kfolds 5 /
+python cmain.py \
+       -m stamp_cikm \
+       -d cikm16 \
+       --epoch 30 \
+       --reload \
+       --kfolds 5 \
        --cutoff 10
 ```
 
 #### RSC15 / Yoochoose
 Equivalently to the Diginetica parameters, with either `rsc15_4` or `rsc15_64` as the `-d` argument, and `stamp_rsc` as the `-m` argument.
 ```
-python cmain.py /
-       -m stamp_rsc /
-       -d rsc15_4 /
-       --epoch 30 /
-       --reload /
-       --kfolds 5 /
+python cmain.py \
+       -m stamp_rsc \
+       -d rsc15_4 \
+       --epoch 30 \
+       --reload \
+       --kfolds 5 \
        --cutoff 10
 ```
 
