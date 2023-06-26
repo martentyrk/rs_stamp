@@ -16,8 +16,8 @@ from util.Config import read_conf
 from util.Randomer import Randomer
 from util.kfolds import split_k_folds
 
-from util.save_results import save_results
 
+from util.save_results import save_results, save_repeat_ratio_results
 import importlib
 
 def load_conf(model, modelconf):
@@ -216,7 +216,8 @@ def main(options, modelconf="config/model.conf"):
 
 
     else:
-        with tf.Graph().as_default():
+        best_model_graph = tf.Graph()
+        with best_model_graph.as_default():
             model = getattr(module, obj)(config)
             model.build_model()
             if is_save or not test_model:
@@ -236,10 +237,16 @@ def main(options, modelconf="config/model.conf"):
                 else:
                     sent_data = train_data
             sent_data = test_data
-            with tf.Session() as sess:
+            if options.kfolds > 1:
+                with tf.Session() as sess:
+                    saver.restore(sess, best_model_path)
+                    recall, mrr, repeat_ratio = best_model.test(sess, sent_data)
+            else:
                 saver.restore(sess, best_model_path)
-                recall, mrr = best_model.test(sess, sent_data)
+                recall, mrr, repeat_ratio = model.test(sess, sent_data)
+            save_repeat_ratio_results(config, repeat_ratio)
             save_results(config, recall, mrr)
+            
 
 if __name__ == '__main__':
     options = option_parse()
