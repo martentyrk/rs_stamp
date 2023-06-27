@@ -30,6 +30,8 @@ def load_data(config={}, reload=True, kfolds=0):
 
     cikm16_train = root_path + project_name +'/datas/cikm16/processed/cikm16_train_full.txt'
     cikm16_test = root_path + project_name +'/datas/cikm16/processed/cikm16_test.txt'
+    cikm16_train_users = root_path + project_name +'/datas/cikm16/processed/cikm16_train_user_full.txt'
+    cikm16_test_users = root_path + project_name +'/datas/cikm16/processed/cikm16_test_user.txt'
     mid_cikm16_emb_dict = "mid_datacikm16_emb_dict.data"
 
     pro = int(re.search(r"([0-9]+)$", config['dataset']).group(1)) # extract the 'pro' value from the dataset string (rsc15_val)
@@ -55,12 +57,20 @@ def load_data(config={}, reload=True, kfolds=0):
                 dump_file([emb_dict, path+mid_rsc15_64_emb_dict])
 
         if config['dataset'] == 'cikm16':
-            train_data, test_data, item2idx, n_items = data_reader.load_cikm16_data(
-                cikm16_train,
-                cikm16_test,
-                kfolds,
-                class_num=config['class_num']
-            )
+            if config['user_split']:
+                train_data, test_data, item2idx, n_items = data_reader.load_cikm16_data(
+                    cikm16_train_users,
+                    cikm16_test_users,
+                    kfolds,
+                    class_num=config['class_num']
+                )
+            else:
+                train_data, test_data, item2idx, n_items = data_reader.load_cikm16_data(
+                    cikm16_train,
+                    cikm16_test,
+                    kfolds,
+                    class_num=config['class_num']
+                )
             config["n_items"] = n_items-1
             emb_dict = load_random(item2idx,edim=config['hidden_size'], init_std=config['emb_stddev'])
             config['pre_embedding'] = emb_dict
@@ -85,12 +95,20 @@ def load_data(config={}, reload=True, kfolds=0):
             config['pre_embedding'] = emb_dict[0]
 
         if config['dataset'] == 'cikm16':
-            train_data, test_data, item2idx, n_items = data_reader.load_cikm16_data(
-                cikm16_train,
-                cikm16_test,
-                kfolds,
-                class_num=config['class_num']
-            )
+            if config['user_split']:
+                train_data, test_data, item2idx, n_items = data_reader.load_cikm16_data(
+                    cikm16_train_users,
+                    cikm16_test_users,
+                    kfolds,
+                    class_num=config['class_num']
+                )
+            else:
+                train_data, test_data, item2idx, n_items = data_reader.load_cikm16_data(
+                    cikm16_train,
+                    cikm16_test,
+                    kfolds,
+                    class_num=config['class_num']
+                )
             config["n_items"] = n_items-1
             path = '../datas/rsc15/embeddings/'
             emb_dict = load_file(path + mid_cikm16_emb_dict)
