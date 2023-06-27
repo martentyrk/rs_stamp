@@ -24,7 +24,7 @@ from tqdm import tqdm
 
 import yaml
 
-with open('../../paths.yaml', 'r') as file:
+with open('paths.yaml', 'r') as file:
     paths = yaml.safe_load(file)
 
 parser = argparse.ArgumentParser()
@@ -33,7 +33,7 @@ args = parser.parse_args()
 
 
 if args.dataset == 'diginetica':
-    dataset = paths['root_path']+paths['project_name']+'/datas/cikm16/raw/train-item-views.csv'
+    dataset = 'datas/cikm16/raw/train-item-views.csv'
 elif args.dataset =='yoochoose':
     with open(paths['yoochoose_clicks_path'], 'r') as f, open('yoochoose-clicks-withHeader.dat', 'w') as fn:
         fn.write('sessionId,timestamp,itemId,category'+'\n')

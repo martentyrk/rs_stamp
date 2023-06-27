@@ -6,7 +6,7 @@ import datetime as dt
 
 import yaml
 
-with open('../../paths.yaml', 'r') as file:
+with open('paths.yaml', 'r') as file:
     paths = yaml.safe_load(file)
 
 PATH_TO_ORIGINAL_DATA = paths['root_path']+paths['project_name']+'/datas/cikm16/raw/'

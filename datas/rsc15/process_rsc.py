@@ -9,13 +9,9 @@ import pandas as pd
 import datetime as dt
 import yaml
 
-with open('../../paths.yaml', 'r') as file:
+with open('paths.yaml', 'r') as file:
     paths = yaml.safe_load(file)
 
-
-
-
-#PATH_TO_PROCESSED_DATA = '/home/lcur2471/rs_stamp/data'
 project_path = paths['root_path']+paths['project_name']
 PATH_TO_ORIGINAL_DATA = paths['yoochoose_clicks_path']
 PATH_TO_PROCESSED_DATA = project_path+'/datas/rsc15/processed/'

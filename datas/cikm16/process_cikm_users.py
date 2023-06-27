@@ -11,7 +11,7 @@ import yaml
 
 np.random.seed(42)
 
-with open('../../paths.yaml', 'r') as file:
+with open('paths.yaml', 'r') as file:
     paths = yaml.safe_load(file)
 
 PATH_TO_ORIGINAL_DATA = paths['root_path']+paths['project_name']+'/datas/cikm16/raw/'
@@ -51,8 +51,8 @@ test = data[data.index.isin(session_test_loc)].copy(deep=True)
 train = train.drop(['userId'], axis=1)
 test = test.drop(['userId'], axis=1)
 
-pickle.dump(session_train_ids, open(PATH_TO_PROCESSED_DATA + 'train_ids.txt', 'wb'))
-pickle.dump(session_test_ids, open(PATH_TO_PROCESSED_DATA + 'test_ids.txt', 'wb'))
+pickle.dump(session_train_ids, open('datas/cikm16/processed/' + 'train_ids.txt', 'wb'))
+pickle.dump(session_test_ids, open('datas/cikm16/processed/' + 'test_ids.txt', 'wb'))
 
 print('Full train set\n\tEvents: {}\n\tSessions: {}\n\tItems: {}'.format(len(train), train.sessionId.nunique(), train.itemId.nunique()))
 train.to_csv(PATH_TO_PROCESSED_DATA + 'cikm16_train_user_full.txt', sep='\t', index=False)

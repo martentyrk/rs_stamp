@@ -22,12 +22,9 @@ import datetime
 import os
 from tqdm import tqdm
 
-
-
-
-dataset = paths['root_path']+paths['project_name']+'/datas/cikm16/raw/train-item-views.csv'
-train_ids = paths['root_path']+paths['project_name']+'/datas/cikm16/processed/train_ids.txt'
-test_ids = paths['root_path']+paths['project_name']+'/datas/cikm16/processed/test_ids.txt'
+dataset = 'datas/cikm16/raw/train-item-views.csv'
+train_ids = 'datas/cikm16/processed/train_ids.txt'
+test_ids = 'datas/cikm16/processed/test_ids.txt'
     
 with open(train_ids, 'rb') as f, open(test_ids, 'rb') as test_f:
     train_user_ids = pickle.load(f)
