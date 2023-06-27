@@ -48,12 +48,13 @@ def print_txt(path, samples, config,  acc = {}, print_att = False):
             for ext_key in sample.ext_matrix:
                 matrixs = sample.ext_matrix[ext_key]
                 outfile.write("attention :\t" + str(ext_key) + '\n')
-                matrix=matrixs[-1]
-                for i in range(len(sample.in_idxes)):
-                    outfile.write(str(sample.in_idxes[i]) + " :\t")
-                    for att in matrix:
-                        outfile.write(str(att[i]) + " ")
-                    outfile.write("\n")
+                if config['user_split'] == None:
+                    matrix=matrixs[-1]
+                    for i in range(len(sample.in_idxes)):
+                        outfile.write(str(sample.in_idxes[i]) + " :\t")
+                        for att in matrix:
+                            outfile.write(str(att[i]) + " ")
+                        outfile.write("\n")
         outfile.write("\n")
     outfile.close()
 

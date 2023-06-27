@@ -321,7 +321,7 @@ class Seq2SeqAttNN(NN):
                     max_mrr = mrr
                     test_data.update_best()
                     if max_recall > threshold_acc:
-                        self.save_model(sess, self.config, saver)
+                        self.config = self.save_model(sess, self.config, saver)
                 print ("                   max_recall: " + str(max_recall)+" max_mrr: "+str(max_mrr) + " repeat: " + str(repeat))
                 test_data.flush()
         if self.is_print:

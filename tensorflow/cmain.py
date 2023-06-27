@@ -178,7 +178,6 @@ def main(options, modelconf="config/model.conf"):
     # metric @ k
     config['cut_off'] = options.cutoff
     config['k_folds'] = options.kfolds
-    print(config['model'])
     best_recall = 0
     best_model_graph = None
     train_data, test_data = load_data(config, reload, kfolds=options.kfolds)
@@ -187,6 +186,7 @@ def main(options, modelconf="config/model.conf"):
     Randomer.set_stddev(config['stddev'])
     config_key = 'cikm_threshold_acc' if dataset=='cikm16' else 'recsys_threshold_acc'
     module = importlib.import_module(module_name)
+    sent_data = test_data
     if options.kfolds > 1:
         best_model_path = f"{config['model_save_path']}{config['model']}-{config['dataset']}-{config['k_folds']}folds-atk{config['cut_off']}-best_model.ckpt"
 
@@ -216,6 +216,8 @@ def main(options, modelconf="config/model.conf"):
 
 
     else:
+        model_path = f"{config['model_save_path']}{config['model']}-{config['dataset']}-atk{config['cut_off']}-usersplit_{user_split}.ckpt"
+
         best_model_graph = tf.Graph()
         with best_model_graph.as_default():
             model = getattr(module, obj)(config)
@@ -227,25 +229,18 @@ def main(options, modelconf="config/model.conf"):
             with tf.Session() as sess:
                 sess.run(tf.global_variables_initializer())
                 model.train(sess, train_data, test_data, saver, threshold_acc=config[config_key])
-    if test_model:
+                saver.save(sess, model_path)
+                if test_model:
+                    saver.restore(sess, model_path)
+                    recall, mrr, repeat_ratio = model.test(sess, sent_data)
+
+    if test_model and options.kfolds > 1:
         with best_model_graph.as_default():
-            if input_data == "test":
-                sent_data = test_data
-            elif input_data == "train":
-                if options.kfolds > 1:
-                    sent_data = [fold for fold in train_data]
-                else:
-                    sent_data = train_data
-            sent_data = test_data
-            if options.kfolds > 1:
-                with tf.Session() as sess:
-                    saver.restore(sess, best_model_path)
-                    recall, mrr, repeat_ratio = best_model.test(sess, sent_data)
-            else:
+            with tf.Session() as sess:
                 saver.restore(sess, best_model_path)
-                recall, mrr, repeat_ratio = model.test(sess, sent_data)
-            save_repeat_ratio_results(config, repeat_ratio)
-            save_results(config, recall, mrr)
+                recall, mrr, repeat_ratio = best_model.test(sess, sent_data)
+    save_repeat_ratio_results(config, repeat_ratio)
+    save_results(config, recall, mrr)
             
 
 if __name__ == '__main__':
