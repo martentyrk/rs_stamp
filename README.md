@@ -1,6 +1,6 @@
 # Exploring data preparation methods for better recommendations
 
-Our paper aims to reproduce the results of the [STAMP paper](https://dl.acm.org/doi/abs/10.1145/3219819.3219950) [GitHub](https://github.com/uestcnlp/STAMP) and use the model to explore how different data preparation methods affect the model's performance. For comparability, we also implement the [NARM model](https://arxiv.org/abs/1711.04725) so that our results obtained with STAMP would be comparable to some baseline method. 
+Our paper aims to reproduce the results of the [STAMP paper](https://dl.acm.org/doi/abs/10.1145/3219819.3219950) ([GitHub](https://github.com/uestcnlp/STAMP)) and use the model to explore how different data preparation methods affect the model's performance. For comparability, we also implement the [NARM model](https://arxiv.org/abs/1711.04725) so that our results obtained with STAMP would be comparable to some baseline method. 
 
 The aim of this README is to make the reproducibility of our results as easy as possible. Follow the steps given below.
 
