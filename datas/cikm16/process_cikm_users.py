@@ -11,7 +11,7 @@ import yaml
 
 np.random.seed(42)
 
-with open('../../paths.yaml', 'r') as file:
+with open('paths.yaml', 'r') as file:
     paths = yaml.safe_load(file)
     
     
