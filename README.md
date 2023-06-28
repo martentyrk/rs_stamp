@@ -203,3 +203,24 @@ python cmain.py \
        --cutoff 10
 ```
 
+## Testing
+
+### STAMP
+For the stamp model, the testing is done together with the training. Just check the validation results of the final epoch.
+
+### NARM
+In order to run NARM for testing, the following commands can be used:
+```
+python main.py \
+       --test \
+       --topk 20 \
+       --checkpoint 'checkpoint to the model' \
+       --train_path 'training data path' \
+       --test_path 'testing data path'
+```
+
+The dataset choice can be done by selecting the corresponding file to train and test with. 
+In order to test for diginetica however, please add the --diginetica flag to the run command and in order to test the user-based split, also add the --user_split flag. 
+
+NB! The user split flag can only be used in accordance with the --diginetica flag, since we only ran experiments with that dataset.
+

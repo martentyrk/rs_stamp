@@ -2,7 +2,6 @@
 import numpy as np
 import tensorflow.compat.v1 as tf
 tf.disable_v2_behavior()
-import time
 from basic_layer.NN_adam import NN
 from util.Printer import TIPrint
 from util.batcher.equal_len.batcher_p import batcher
@@ -10,7 +9,6 @@ from util.AccCalculater import cau_recall_mrr_org
 from util.AccCalculater import cau_samples_recall_mrr
 from util.Pooler import pooler
 from basic_layer.FwNn3AttLayer import FwNnAttLayer
-from util.FileDumpLoad import dump_file
 from util.save_results import save_results
 from util.RepeatRatio import repeat_ratio_batch
 from tqdm import tqdm
@@ -185,12 +183,10 @@ class Seq2SeqAttNN(NN):
 
         max_recall = 0.0
         max_mrr = 0.0
-        max_train_acc = 0.0
         for epoch in range(self.nepoch):   # epoch round.
             print('Epoch:', epoch)
             batch = 0
             c = []
-            cost = 0.0  # the cost of each epoch.
             bt = batcher(
                 samples=train_data.samples,
                 class_num= self.n_items,
@@ -204,7 +200,6 @@ class Seq2SeqAttNN(NN):
                 # build the feed_dict
                 # for x,y in zip(batch_data['in_idxes'],batch_data['out_idxes']):
                 batch_lenth = len(batch_data['in_idxes'])
-                event = len(batch_data['in_idxes'][0])
 
                 if batch_lenth > self.batch_size:
                     patch_len = int(batch_lenth / self.batch_size)
@@ -238,10 +233,8 @@ class Seq2SeqAttNN(NN):
                                 [self.loss, self.global_step, self.optimize, self.embe_dict],
                                 feed_dict=feed_dict
                             )
-
-                            # cost = np.mean(crt_loss)
                             c += list(crt_loss)
-                            # print("Batch:" + str(batch) + ",cost:" + str(cost))
+
                             batch += 1
                         i += self.batch_size
                     if remain > 0:
@@ -272,10 +265,7 @@ class Seq2SeqAttNN(NN):
                                 [self.loss, self.global_step, self.optimize, self.embe_dict],
                                 feed_dict=feed_dict
                             )
-
-                            # cost = np.mean(crt_loss)
                             c += list(crt_loss)
-                            # print("Batch:" + str(batch) + ",cost:" + str(cost))
                             batch += 1
                 else:
                     tmp_in_data = batch_data['in_idxes']
@@ -305,11 +295,8 @@ class Seq2SeqAttNN(NN):
                             feed_dict=feed_dict
                         )
 
-                        # cost = np.mean(crt_loss)
                         c+= list(crt_loss)
-                        # print("Batch:" + str(batch) + ",cost:" + str(cost))
                         batch += 1
-            # train_acc = self.test(sess,train_data)
             avgc = np.mean(c)
             if np.isnan(avgc):
                 print('Epoch {}: NaN error!'.format(str(epoch)))
@@ -329,8 +316,9 @@ class Seq2SeqAttNN(NN):
                 test_data.flush()
         if self.is_print:
             val_results = save_results(self.config, max_recall, max_mrr, split='val')
-            TIPrint(test_data.samples, self.config,
-                    {'recall': max_recall, 'mrr': max_mrr, 'repeat': repeat}, True)
+            if not self.config['user_split']:
+                TIPrint(test_data.samples, self.config,
+                        {'recall': max_recall, 'mrr': max_mrr, 'repeat': repeat}, True)
             return val_results
 
     def test(self,sess,test_data):
@@ -353,9 +341,7 @@ class Seq2SeqAttNN(NN):
             # get this batch data
             batch_data = bt.next_batch()
             # build the feed_dict
-            # for x,y in zip(batch_data['in_idxes'],batch_data['out_idxes']):
             batch_lenth = len(batch_data['in_idxes'])
-            event = len(batch_data['in_idxes'][0])
             if batch_lenth > self.batch_size:
                 patch_len = int(batch_lenth / self.batch_size)
                 remain = int(batch_lenth % self.batch_size)

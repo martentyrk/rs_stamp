@@ -1,9 +1,7 @@
-# root_path: '~/Documents/GitHub/'
-# root_path: "/Users/marten/UvA labs/"
-root_path: '/home/lcur2471/'
+#Insert your paths here as a global variable.
+
+#Insert the path to the folder where the project is saved.
+# root_path: ''
 
 project_name: "rs_stamp"
-
-# yoochoose_clicks_path: '~/Documents/GitHub/rs_stamp/datas/rsc15/raw/yoochoose-misc/yoochoose-clicks.dat'
-# yoochoose_clicks_path: "/Users/marten/UvA labs/rs_stamp/datas/rsc15/raw/yoochoose-clicks.dat"
-yoochoose_clicks_path: '/home/lcur2471/rs_stamp/datas/rsc15/raw/yoochoose-clicks.dat'
+#yoochoose_clicks_path: ''

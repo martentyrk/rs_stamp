@@ -187,6 +187,8 @@ def main(options, modelconf="config/model.conf"):
     config_key = 'cikm_threshold_acc' if dataset=='cikm16' else 'recsys_threshold_acc'
     module = importlib.import_module(module_name)
     sent_data = test_data
+    
+    ### START K-FOLDS TRAINING
     if options.kfolds > 1:
         best_model_path = f"{config['model_save_path']}{config['model']}-{config['dataset']}-{config['k_folds']}folds-atk{config['cut_off']}-best_model.ckpt"
 

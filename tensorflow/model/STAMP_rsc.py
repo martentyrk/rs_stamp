@@ -2,7 +2,6 @@
 import numpy as np
 import tensorflow.compat.v1 as tf
 tf.disable_v2_behavior()
-import time
 from basic_layer.NN_adam import NN
 from util.Printer import TIPrint
 from util.batcher.equal_len.batcher_p import batcher
@@ -185,11 +184,9 @@ class Seq2SeqAttNN(NN):
 
         max_recall = 0.0
         max_mrr = 0.0
-        max_train_acc = 0.0
         for epoch in range(self.nepoch):   # epoch round.
             batch = 0
             c = []
-            cost = 0.0  # the cost of each epoch.
             bt = batcher(
                 samples=train_data.samples,
                 class_num= self.n_items,
@@ -235,14 +232,10 @@ class Seq2SeqAttNN(NN):
                                 [self.loss, self.global_step, self.optimize, self.embe_dict],
                                 feed_dict=feed_dict
                             )
-
-                            # cost = np.mean(crt_loss)
                             c += list(crt_loss)
-                            # print("Batch:" + str(batch) + ",cost:" + str(cost))
                             batch += 1
                         i += self.batch_size
                     if remain > 0:
-                        # print (i, remain)
                         tmp_in_data = batch_data['in_idxes'][i:]
                         tmp_out_data = batch_data['out_idxes'][i:]
                         for s in range(len(tmp_in_data[0])):
@@ -270,9 +263,7 @@ class Seq2SeqAttNN(NN):
                                 feed_dict=feed_dict
                             )
 
-                            # cost = np.mean(crt_loss)
                             c += list(crt_loss)
-                            # print("Batch:" + str(batch) + ",cost:" + str(cost))
                             batch += 1
                 else:
                     tmp_in_data = batch_data['in_idxes']
@@ -301,12 +292,8 @@ class Seq2SeqAttNN(NN):
                             [self.loss, self.global_step, self.optimize, self.embe_dict],
                             feed_dict=feed_dict
                         )
-
-                        # cost = np.mean(crt_loss)
                         c+= list(crt_loss)
-                        # print("Batch:" + str(batch) + ",cost:" + str(cost))
                         batch += 1
-            # train_acc = self.test(sess,train_data)
             avgc = np.mean(c)
             if np.isnan(avgc):
                 print('Epoch {}: NaN error!'.format(str(epoch)))

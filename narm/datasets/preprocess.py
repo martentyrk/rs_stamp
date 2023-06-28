@@ -127,6 +127,8 @@ for _, date in dates:
         maxdate = date
 
 # 7 days for test
+
+#Use the same setup as in STAMP
 splitdate = 0
 if args.dataset == 'yoochoose':
     splitdate = maxdate - 86400 * 1  # the number of seconds for a day：86400
