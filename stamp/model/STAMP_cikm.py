@@ -164,9 +164,7 @@ class Seq2SeqAttNN(NN):
             trainable=True
         )
         attout = tf.tanh(tf.matmul(attout,self.w1))
-        # attout = tf.nn.dropout(attout, self.output_keep_probs)
         lastinputs= tf.tanh(tf.matmul(lastinputs,self.w2))
-        # lastinputs= tf.nn.dropout(lastinputs, self.output_keep_probs)
         prod = attout * lastinputs
         sco_mat = tf.matmul(prod,self.embe_dict[1:],transpose_b= True)
         self.softmax_input = sco_mat
@@ -198,7 +196,6 @@ class Seq2SeqAttNN(NN):
                 # get this batch data
                 batch_data = bt.next_batch()
                 # build the feed_dict
-                # for x,y in zip(batch_data['in_idxes'],batch_data['out_idxes']):
                 batch_lenth = len(batch_data['in_idxes'])
 
                 if batch_lenth > self.batch_size:
@@ -238,7 +235,6 @@ class Seq2SeqAttNN(NN):
                             batch += 1
                         i += self.batch_size
                     if remain > 0:
-                        # print (i, remain)
                         tmp_in_data = batch_data['in_idxes'][i:]
                         tmp_out_data = batch_data['out_idxes'][i:]
                         for s in range(len(tmp_in_data[0])):
@@ -337,7 +333,6 @@ class Seq2SeqAttNN(NN):
         for _ in tqdm(range(len(bt.rand_idx))):
             if not bt.has_next():
                 break
-            #while bt.has_next():    # batch round.
             # get this batch data
             batch_data = bt.next_batch()
             # build the feed_dict
@@ -383,7 +378,6 @@ class Seq2SeqAttNN(NN):
                         batch += 1
                     i += self.batch_size
                 if remain > 0:
-                    # print (i, remain)
                     tmp_in_data = batch_data['in_idxes'][i:]
                     tmp_out_data = batch_data['out_idxes'][i:]
                     tmp_batch_ids = batch_data['batch_ids'][i:]

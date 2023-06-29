@@ -319,7 +319,7 @@ class Seq2SeqAttNN(NN):
 
     def test(self,sess,test_data):
 
-        # calculate the acc
+        # calculate the metrics
         print('Measuring Recall@{}, MRR@{}, and Repeat@{}'.format(self.cut_off, self.cut_off, self.cut_off))
         mrr, recall = [], []
         repeat = []
