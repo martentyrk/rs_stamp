@@ -216,6 +216,8 @@ def _load_cikm16_data(file_path, item2idx, pad_idx, class_num, kfolds, testset=F
         # a list containing tuple pairs of (train_samplepack, val_samplepack)
         folded_samples = []
         folds = split_k_folds(samples, kfolds)
+
+        # The Sample() objects corresponding to each fold are packaged into a Samplepack() object
         for fold_train, fold_val in folds:
             train_samplepack = Samplepack()
             train_samplepack.samples = samples[fold_train]
@@ -227,6 +229,7 @@ def _load_cikm16_data(file_path, item2idx, pad_idx, class_num, kfolds, testset=F
 
             folded_samples.append((train_samplepack, val_samplepack))
 
+        # List containing tuples of train and validation Samplepack() objects
         return folded_samples
 
     samplepack.samples = samples

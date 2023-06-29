@@ -195,10 +195,12 @@ def main(options, modelconf="config/model.conf"):
         for fold in tqdm(range(options.kfolds)):
             cur_fold_graph = tf.Graph()
             with cur_fold_graph.as_default():
+
+                # Initialize a new model for each fold
                 model = getattr(module, obj)(config)
                 model.build_model()
 
-                # need to do this after each fold
+                # initialize a new Saver for each fold and model
                 if is_save or not test_model:
                     saver = tf.train.Saver(max_to_keep=30)
                 else:
@@ -212,11 +214,15 @@ def main(options, modelconf="config/model.conf"):
                     # if the P@K is the best, save the model
                     if val_results['recall'] > best_recall:
                         best_recall = val_results['recall']
+
+                        # save the best model
                         saver.save(sess, best_model_path)
+
+                        # keep track of the current graph, such that it can be used for testing
                         best_model_graph = cur_fold_graph
                         best_model = model
 
-
+    ### Standard (non K-folds) training and testing procedure
     else:
         model_path = f"{config['model_save_path']}{config['model']}-{config['dataset']}-atk{config['cut_off']}-usersplit_{user_split}.ckpt"
 
@@ -236,11 +242,14 @@ def main(options, modelconf="config/model.conf"):
                     saver.restore(sess, model_path)
                     recall, mrr, repeat_ratio = model.test(sess, sent_data)
 
+    # Test on the best model if using K-folds
     if test_model and options.kfolds > 1:
         with best_model_graph.as_default():
             with tf.Session() as sess:
                 saver.restore(sess, best_model_path)
                 recall, mrr, repeat_ratio = best_model.test(sess, sent_data)
+
+    # Save results to output/*.csv
     save_repeat_ratio_results(config, repeat_ratio)
     save_results(config, recall, mrr)
             

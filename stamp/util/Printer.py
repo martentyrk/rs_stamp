@@ -15,7 +15,6 @@ def TIPrint(samples, config, acc = {},print_att = False,Time = None):
         suf = time.strftime("%Y%m%d%H%M", time.localtime())[4:]
     else:
         suf = Time
-    #path = base_path + "text/" + config['model'] + "-" + config['dataset'] + "-" + suf + '.out'
     path = f"{base_path}text/{config['model']}-{config['dataset']}-{config['k_folds']}folds-atk{config['cut_off']}-{suf}.out"
     print_txt(path, samples, config, acc, print_att)
     return suf
@@ -48,6 +47,8 @@ def print_txt(path, samples, config,  acc = {}, print_att = False):
             for ext_key in sample.ext_matrix:
                 matrixs = sample.ext_matrix[ext_key]
                 outfile.write("attention :\t" + str(ext_key) + '\n')
+
+                # If using user_split, do not add this to the outfile
                 if config['user_split'] == None:
                     matrix=matrixs[-1]
                     for i in range(len(sample.in_idxes)):

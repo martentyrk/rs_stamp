@@ -26,18 +26,9 @@ class Samplepack(object):
         for sample in self.samples:
             sample.pred = []
 
-    #
     def update_best(self):
         for sample in self.samples:
             sample.best_pred = sample.pred
-    #
-    # def pack_memories(self, memories, ids, has_eos):
-    #     for i in range(len(ids)):
-    #         sample = self.id2sample[ids[i]]
-    #         memory = memories[i]
-    #         if has_eos:
-    #             memory = memory[:-1]
-    #         sample.memory = memory
 
     def pack_ext_matrix(self, name, matrixes, ids):
         # matrixes维度为3,第0维对应于样本s. len(matrixes)表示样本个数.
