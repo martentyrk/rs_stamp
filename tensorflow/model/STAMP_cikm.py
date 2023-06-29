@@ -1,4 +1,9 @@
 #coding=utf-8
+
+"""
+Most stuff in this is from the original repository, only adjustments to allow repr@k to be done
+"""
+
 import numpy as np
 import tensorflow.compat.v1 as tf
 tf.disable_v2_behavior()
