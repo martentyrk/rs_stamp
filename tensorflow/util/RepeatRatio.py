@@ -1,3 +1,6 @@
+"""
+Everything here done as a part of our RecSys project
+"""
 import numpy as np
 
 
@@ -5,7 +8,7 @@ def repeat_ratio_batch(samples, preds, k=20):
     """Take the repeat ratio for a single batch.
 
     Args:
-        samples: List-like of sample arrays.
+        samples: List-like of Sample.
         preds: List-like of prediction arrays.
         k (int, optional): Cut-off point for index ranks. Defaults to 20.
 
@@ -24,6 +27,9 @@ def repeat_ratio_batch(samples, preds, k=20):
 
 
 def test0():
+    """
+    Test to make sure everything works right
+    """
     sample = np.array([[0,1,5,6,7,8,9]])
     pred = np.array([[1,1,-1,-1,-1]])
     ratio = repeat_ratio_batch(sample, pred, k=5)[0]
@@ -31,6 +37,9 @@ def test0():
     print("test0 passed.")
 
 def test1():
+    """
+    Test to make sure everything works right
+    """
     sample = np.array([[1,4,5,6,7,8,9]])
     pred = np.array([[1,1,-1,-1,-1]])
     ratio = repeat_ratio_batch(sample, pred, k=5)[0]
@@ -39,6 +48,6 @@ def test1():
 
 
 if __name__ == "__main__":
-    # run a unit test
+    # run unit tests
     test0()
     test1()
