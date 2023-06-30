@@ -9,6 +9,7 @@ import yaml
 with open('paths.yaml', 'r') as file:
     paths = yaml.safe_load(file)
 
+#Paths to data folders
 PATH_TO_ORIGINAL_DATA = paths['root_path']+paths['project_name']+'/datas/cikm16/raw/'
 PATH_TO_PROCESSED_DATA = paths['root_path']+paths['project_name']+'/datas/cikm16/processed/'
 
@@ -18,8 +19,10 @@ data['Time'] = data['eventdate'].apply(lambda x: dt.datetime.strptime(x, '%Y-%m-
 del(data['eventdate'])
 
 session_lengths = data.groupby('sessionId').size()
+#Remove items where session len is shorter than 2
 data = data[np.in1d(data.sessionId, session_lengths[session_lengths>1].index)]
 item_supports = data.groupby('itemId').size()
+# Remove items that occur less than 5 times
 data = data[np.in1d(data.itemId, item_supports[item_supports>=5].index)]
 session_lengths = data.groupby('sessionId').size()
 data = data[np.in1d(data.sessionId, session_lengths[session_lengths>1].index)]

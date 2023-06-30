@@ -4,10 +4,65 @@ Our paper aims to reproduce the results of the [STAMP paper](https://dl.acm.org/
 
 The aim of this README is to make the reproducibility of our results as easy as possible. Follow the steps given below.
 
+
+## Modified files
+As per grading scheme, the files we've modified in some way are shown on the file tree below:
+
+
+```
+project
+│   README.md
+│   paths.yaml
+│
+└───datas
+│   │   
+│   │
+│   └───cikm16
+│       │   process_cikm_users.py
+│       │   process_cikm.py
+│   
+└───narm
+│   │   
+|   │   
+│   └───datasets
+│   │   │   preprocess_user.py
+│   │   │   preprocess.py
+│   │
+│   │  main.py
+│   
+|
+└───stamp
+    │
+    └───basic_layer
+    │   │   NN_adam.py (tensorflow versioning)
+    │
+    └───data_prepare
+    │   │   data_loader.py
+    │   │   data_reader.py
+    │
+    └───model
+    │   │   STAMP_cikm.py
+    │   │   STAMP_rsc.py
+    │
+    └───output
+    │
+    └───util
+    │   │   kfolds.py
+    │   │   Pooler.py (tensorflow versioning)
+    │   │   RepeatRatio.py
+    │   │   save_results.py
+    │   │   SoftmaxMask.py (tensorflow versioning)
+    │   │   TensorGather.py (tensorflow versioning)
+    │
+    │
+    │  cmain.py
+```
+
 # 0) Environments
 We use two different environments in this project, one for running the STAMP and its related files and another one for NARM and its related files.
 
 ### STAMP environment
+When on a Linux operating system, the tf_env.yml can be used to set up the environment, but in order to ensure a smooth experience, we recommend manually installing the following packages instead:
 ```
 python==3.9
 tensorflow==2.12
@@ -202,4 +257,25 @@ python cmain.py \
        --kfolds 5 \
        --cutoff 10
 ```
+
+## Testing
+
+### STAMP
+For the stamp model, the testing is done together with the training. Just check the validation results of the final epoch.
+
+### NARM
+In order to run NARM for testing, the following commands can be used:
+```
+python main.py \
+       --test \
+       --topk 20 \
+       --checkpoint 'checkpoint to the model' \
+       --train_path 'training data path' \
+       --test_path 'testing data path'
+```
+
+The dataset choice can be done by selecting the corresponding file to train and test with. 
+In order to test for diginetica however, please add the --diginetica flag to the run command and in order to test the user-based split, also add the --user_split flag. 
+
+NB! The user split flag can only be used in accordance with the --diginetica flag, since we only ran experiments with that dataset.
 

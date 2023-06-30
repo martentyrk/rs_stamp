@@ -67,9 +67,9 @@ def main():
         n_items = 49927 # for user based split
     else:
         if args.diginetica:
-            n_items = 43098 # for session based split
+            n_items = 43098 # for session based split on diginetica
         else:
-            n_items = 37484
+            n_items = 37484 # for session based split on yoochoose datasets
 
     print(n_items, 'n_items')
     model = NARM(n_items, args.hidden_size, args.embed_dim, args.batch_size).to(device)
@@ -93,7 +93,7 @@ def main():
         recall, mrr = validate(valid_loader, model)
         print('Epoch {} validation: Recall@{}: {:.4f}, MRR@{}: {:.4f} \n'.format(epoch, args.topk, recall, args.topk, mrr))
 
-        # store best loss and save a model checkpoint
+        # store latest checkpoint
         ckpt_dict = {
             'epoch': epoch + 1,
             'state_dict': model.state_dict(),
@@ -122,8 +122,6 @@ def trainForEpoch(train_loader, model, optimizer, epoch, num_epochs, criterion, 
 
         loss_val = loss.item()
         sum_epoch_loss += loss_val
-        
-        iter_num = epoch * len(train_loader) + i + 1
 
         if i % log_aggr == 0:
             print('[TRAIN] epoch %d/%d batch loss: %.4f (avg %.4f) (%.2f im/s)'

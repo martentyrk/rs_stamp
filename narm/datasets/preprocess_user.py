@@ -25,7 +25,9 @@ from tqdm import tqdm
 dataset = 'datas/cikm16/raw/train-item-views.csv'
 train_ids = 'datas/cikm16/processed/train_ids.txt'
 test_ids = 'datas/cikm16/processed/test_ids.txt'
-    
+
+
+#Load the train and test ID's for users.  
 with open(train_ids, 'rb') as f, open(test_ids, 'rb') as test_f:
     train_user_ids = pickle.load(f)
     test_user_ids = pickle.load(test_f)
@@ -71,7 +73,6 @@ with open(dataset, "r") as f:
         sorted_clicks = sorted(sess_clicks[i], key=operator.itemgetter(1))
         sess_clicks[i] = [c[0] for c in sorted_clicks]
         
-    # sorted_users = sorted(sess_user[i], key=operator.itemgetter(1))
     sess_date[curid] = date, userId
 print("-- Reading data @ %ss" % datetime.datetime.now())
 
@@ -203,6 +204,7 @@ for seq in tes_seqs:
     all += len(seq)
 print('avg length: ', all/(len(tra_seqs) + len(tes_seqs) * 1.0))
 
+#Save files
 if not os.path.exists('diginetica'):
     os.makedirs('diginetica')
 pickle.dump(tra, open('diginetica/train_user.txt', 'wb'))
